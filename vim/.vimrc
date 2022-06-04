@@ -34,6 +34,27 @@ noremap \n :tabe<CR>
 noremap \q :-tabnext<CR>
 noremap \e :+tabnext<CR>
 
+" tmux Copy to system clipboard
+" nnoremap \c :call CopyToSystem()<CR>
+" function CopyToSystem()
+"     let bExistTermuxApi=!system('dpkg -s termux-api >/dev/null 2>&1; echo $?')
+"     if bExistTermuxApi
+"         let tmpfile = system('mktemp')
+"         call writefile(getreg('0',1,1), tmpfile, 'b')
+"         call system('cat "'. tmpfile . '" |termux-clipboard-set')
+"         call system('termux-toast "copied to clipboard."')
+"         call system('rm "' . tmpfile . '"' )
+"     else
+"         echom "termux-api not installed."
+"     endif
+" endfunc
+
+
+" =========================
+" set
+" =========================
+
+
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
