@@ -48,8 +48,9 @@ CARGO_HTTP_MULTIPLEXING=false
 . "${MAPP_DIR}/_env_make/rust-cargo/env"
 
 # completion
-source ${MAPP_DIR}/zoxide/completions/zoxide.bash
-source ${MAPP_DIR}/lsd/autocomplete/lsd.bash-completion
+# ln -s ${MAPP_DIR}/zoxide/completions/_zoxide /usr/share/zsh/site-functions/
+# source ${MAPP_DIR}/zoxide/completions/zoxide.bash
+# sudo ln -s $MAPP_DIR/lsd/autocomplete/_lsd /usr/share/zsh/site-functions
 
 alias supervisorctl='/opt/local-app/supervisord/supervisord ctl -s http://127.0.0.1:18080 -u tom -P 111'
 
