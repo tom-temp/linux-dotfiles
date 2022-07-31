@@ -18,7 +18,7 @@ zstyle ':completion:*' file-list all
 zstyle ':completion:*' menu select
 ##分类
 zstyle ':completion:*:*:*:*:descriptions' format '%F{yellow}-- %d --%f'
-
+zstyle ':completion:*' group-name ''
 
 # 信息
 zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
