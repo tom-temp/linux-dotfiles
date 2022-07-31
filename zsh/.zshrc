@@ -10,7 +10,7 @@ fi
 
 # 补全提示
 autoload -U compinit; compinit
-autoload -U +X bashcompinit && bashcompinit
+# autoload -U +X bashcompinit && bashcompinit
 
 ##提示排序
 zstyle ':completion:*:*:cp:*' file-sort size
