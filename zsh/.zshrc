@@ -6,11 +6,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # The following lines were added by compinstall
-
+# for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 
 # 补全提示
 autoload -U compinit; compinit
 autoload -U +X bashcompinit && bashcompinit
+
 ##提示排序
 zstyle ':completion:*:*:cp:*' file-sort size
 zstyle ':completion:*' file-sort modification
@@ -37,7 +38,8 @@ HISTSIZE=1000
 SAVEHIST=1000
 
 # End of lines configured by zsh-newuser-install
-
+# mkdir -p ~/.config/zsh
+# git clone https://github.com/zdharma-continuum/zinit.git ~/.config/zsh/zinit
 source '/home/tom/.config/zsh/zinit/zinit.zsh'
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
