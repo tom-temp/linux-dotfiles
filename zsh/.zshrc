@@ -40,6 +40,8 @@ SAVEHIST=1000
 source '/home/tom/.config/zsh/zinit/zinit.zsh'
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
+zinit light zsh-users/zsh-autosuggestions
+zinit light zdharma/fast-syntax-highlighting
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
