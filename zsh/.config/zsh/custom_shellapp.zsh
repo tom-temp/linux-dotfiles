@@ -1,4 +1,9 @@
 export MAIN_DIR=/opt
+MAPP_DIR=${MAIN_DIR}/shell-app
+
+# 环境变量
+export MAPP_DIR=${MAPP_DIR}
+export PATH=$PATH:${MAPP_DIR}/bin
 
 export COLOR_H1_0='\e[1;35;42m'
 export COLOR_H1_1='\e[4;30;46m'
@@ -11,18 +16,13 @@ export GITULS=http://github.opsp.eu.org/
 # 命令设置
 HISTTIMEFORMAT="[%m-%d %H:%M] "
 
-# 环境变量
-MAIN_DIR=/opt
-MAPP_DIR=/opt/shell-app
-
-export PATH=$PATH:${MAPP_DIR}/bin
 # ls命令
 if [ "$(command -v exa)" ]; then
     alias ll='exa -l --color always -a -s type'
     alias ls='exa'
     alias tree='exa -T'
 fi
-if [ "$(command -v exa)" ]; then
+if [ "$(command -v lsd)" ]; then
     alias lsd='lsd'
     alias lsa='lsd -aX --group-dirs first'
     alias lss='lsd -laX --group-dirs first'
@@ -32,8 +32,8 @@ fi
 if [ "$(command -v zoxide)" ]; then
     eval "$(zoxide init zsh)"
 fi
-# app alias
 
+# app alias
 alias grep='rg'
 alias psui='procs'
 alias du='dust'
@@ -45,10 +45,10 @@ export CARGO_HOME=${MAPP_DIR}/_env_make/rust-cargo
 export RUSTUP_HOME=${MAPP_DIR}/_env_make/rust-main
 CARGO=${MAPP_DIR}/_env_make/rust-cargo/bin
 CARGO_HTTP_MULTIPLEXING=false
-. "${MAPP_DIR}/_env_make/rust-cargo/env"
+# . "${MAPP_DIR}/_env_make/rust-cargo/env"
 
 # completion
-# ln -s ${MAPP_DIR}/zoxide/completions/_zoxide /usr/share/zsh/site-functions/
+# sudo ln -s ${MAPP_DIR}/zoxide/completions/_zoxide /usr/share/zsh/site-functions/
 # source ${MAPP_DIR}/zoxide/completions/zoxide.bash
 # sudo ln -s $MAPP_DIR/lsd/autocomplete/_lsd /usr/share/zsh/site-functions
 
