@@ -13,6 +13,13 @@ export COLOR_END='\e[0m'
 
 export GITULS=http://github.opsp.eu.org/
 
+# oh-my-posh
+# sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+# sudo chmod +x /usr/local/bin/oh-my-posh
+if [ "$(command -v oh-my-posh)" ]; then
+  eval "$(oh-my-posh init zsh --config ~/.config/zsh/my-night-owl.omp.json )"
+fi
+
 # 命令设置
 HISTTIMEFORMAT="[%m-%d %H:%M] "
 
