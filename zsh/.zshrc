@@ -17,6 +17,7 @@ zstyle ':completion:*:*:cp:*' file-sort size
 zstyle ':completion:*' file-sort modification
 zstyle ':completion:*' file-list all
 ##补全选择
+zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' menu select
 ##分类
 zstyle ':completion:*:*:*:*:descriptions' format '%F{yellow}-- %d --%f'
@@ -25,7 +26,7 @@ zstyle ':completion:*' group-name ''
 # 信息
 zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
 zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:*:*:*:corrections' format '%F{red}!- %d (errors: %e) -!%f'
 
 # 缓存
 zstyle ':completion:*' use-cache on
