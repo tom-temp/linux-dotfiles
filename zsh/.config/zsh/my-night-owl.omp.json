@@ -5,9 +5,22 @@
         "alignment": "right",
         "segments": [
           {
-            "type": "text",
+            "type": "command",
             "style": "diamond",
             "leading_diamond": "\ue0d4",
+            "trailing_diamond": "\ue0d1",
+            "background": "#c2e9ff",
+            "foreground": "#c2e9ff",
+            "properties": {
+              "shell": "sh",
+              "command": "cat /sys/class/power_supply/battery/capacity"
+            },
+            "template": "-"
+          },
+          {
+            "type": "text",
+            "style": "diamond",
+            // "leading_diamond": "\ue0d4",
             "trailing_diamond": "\ue0b4",
             "foreground": "#193549",
             "background": "#c2e9ff",
@@ -34,10 +47,8 @@
             },
             "style": "diamond",
             "leading_diamond": "\ue0b6",
-            "trailing_diamond": "\ue0bc",
-            // "trailing_diamond": "\ue0b6",
+            // "trailing_diamond": "\ue0bc",
             "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}}",
-
             "type": "os"
           },
           {
@@ -114,7 +125,8 @@
               "{{if eq \"Discharging\" .State.String}}#ff5722{{end}}",
               "{{if eq \"Full\" .State.String}}#4caf50{{end}}"
             ],
-            "template": " {{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }}\uF295 ",
+            // "template": " {{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }}\uF295 ",
+            "template": " {{ if not .Error }}{{ .Icon }}{{ .Segments.Command.Output }}{{ end }}\uF295 ",
             "properties": {
               "discharging_icon": "\uf57f ",
               "charging_icon": "\uf589 ",
