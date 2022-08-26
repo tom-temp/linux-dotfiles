@@ -13,6 +13,10 @@ export COLOR_END='\e[0m'
 
 export GITULS=http://github.opsp.eu.org/
 
+# default programe
+# export EDITOR='/usr/bin/vim'
+
+
 # oh-my-posh
 # sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
 # sudo chmod +x /usr/local/bin/oh-my-posh
@@ -39,13 +43,19 @@ fi
 if [ "$(command -v zoxide)" ]; then
     eval "$(zoxide init zsh)"
 fi
-
-# app alias
-alias grep='rg'
-alias psui='procs'
-alias du='dust'
-alias rm='trash'
-alias rml='trash-list'
+if [ "$(command -v rg)" ]; then
+    alias grep='rg'
+fi
+if [ "$(command -v procs)" ]; then
+    alias psui='procs'
+fi
+if [ "$(command -v dust)" ]; then
+    alias du='dust'
+fi
+if [ "$(command -v trash)" ]; then
+    alias rm='trash'
+    alias rml='trash-list'
+fi
 
 # rust环境变量
 export CARGO_HOME=${MAPP_DIR}/_env_make/rust-cargo
