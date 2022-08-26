@@ -5,143 +5,6 @@
         "alignment": "right",
         "segments": [
           {
-            "type": "command",
-            "style": "diamond",
-            "leading_diamond": "\ue0d4",
-            "trailing_diamond": "\ue0d1",
-            "background": "#c2e9ff",
-            "foreground": "#c2e9ff",
-            "properties": {
-              "shell": "sh",
-              "command": "cat /sys/class/power_supply/battery/capacity"
-            },
-            "template": "-"
-          },
-          {
-            "type": "text",
-            "style": "diamond",
-            // "leading_diamond": "\ue0d4",
-            "trailing_diamond": "\ue0b4",
-            "foreground": "#193549",
-            "background": "#c2e9ff",
-            "template": " {{ .UserName }} \uf1fa {{ .HostName }} "
-          },
-          {
-            "foreground": "#f1f1f1",
-            "style": "plain",
-            "template": "\u2500\u256e",
-            "type": "text"
-          }
-        ],
-        "type": "prompt"
-      },
-      {
-        "alignment": "left",
-        "newline": true,
-        "segments": [
-          {
-            "background": "#ffeb95",
-            "foreground": "#011627",
-            "properties": {
-              "windows": "\uf871"
-            },
-            "style": "diamond",
-            "leading_diamond": "\ue0b6",
-            // "trailing_diamond": "\ue0bc",
-            "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}}",
-            "type": "os"
-          },
-          {
-            "background": "#ef5350",
-            "foreground": "#ffeb95",
-            "powerline_symbol": "\ue0bc",
-            "style": "accordion",
-            "template": " \uf292 ",
-            // "trailing_diamond": "\ue0b0",
-            "type": "root"
-          },
-          {
-            "background": "#ffc9c2",
-            "foreground": "#011627",
-            "powerline_symbol": "\ue0bc",
-            "properties": {
-              "folder_separator_icon": " <#011627>\ue0bb</> ",
-              "home_icon": "\uf7db",
-              "folder_icon": "\uf07c",
-              "style": "agnoster"
-            },
-            "style": "accordion",
-            "template": " {{ .Path }} ",
-            "type": "path"
-          },
-          {
-            "background": "#22da6e",
-            "background_templates": [
-              "{{ if or (.Working.Changed) (.Staging.Changed) }}#addb67{{ end }}",
-              "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#f78c6c{{ end }}",
-              "{{ if gt .Ahead 0 }}#21c7a8{{ end }}",
-              "{{ if gt .Behind 0 }}#c792ea{{ end }}"
-            ],
-            "foreground": "#011627",
-            "powerline_symbol": "\ue0bc",
-            "properties": {
-              "branch_icon": "\ue725 ",
-              "fetch_stash_count": true,
-              "fetch_status": true,
-              "fetch_upstream_icon": true,
-              "fetch_worktree_count": true
-            },
-            "style": "accordion",
-            "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \uf692 {{ .StashCount }}{{ end }} ",
-            "type": "git"
-          },
-          {
-            "background": "#575656",
-            "foreground": "#d6deeb",
-            "properties": {
-              "style": "roundrock",
-              "threshold": 0
-            },
-            "style": "diamond",
-            // "leading_diamond": "<transparent,#575656>\ue0b0</>",
-            "trailing_diamond": "\ue0b4",
-            "template": " {{ .FormattedMs }} ",
-            "type": "executiontime"
-          }
-        ],
-        "type": "prompt"
-      },
-      {
-        "alignment": "right",
-        "segments": [
-          {
-            "type": "battery",
-            "style": "diamond",
-            "leading_diamond": "\ue0ba",
-            "foreground": "#193549",
-            "background": "#cfd7ee",
-            "background_templates": [
-              "{{if eq \"Charging\" .State.String}}#40c4ff{{end}}",
-              "{{if eq \"Discharging\" .State.String}}#ff5722{{end}}",
-              "{{if eq \"Full\" .State.String}}#4caf50{{end}}"
-            ],
-            // "template": " {{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }}\uF295 ",
-            "template": " {{ if not .Error }}{{ .Icon }}{{ .Segments.Command.Output }}{{ end }}\uF295 ",
-            "properties": {
-              "discharging_icon": "\uf57f ",
-              "charging_icon": "\uf589 ",
-              "charged_icon": "\uf583 "
-            }
-          },
-          {
-            "background": "#8f43f3",
-            "foreground": "#ffffff",
-            "powerline_symbol": "\ue0bc",
-            "style": "powerline",
-            "template": " \uf85a {{ round .PhysicalPercentUsed .Precision }}% ",
-            "type": "sysinfo"
-          },
-          {
             "background": "#303030",
             "foreground": "#3C873A",
             "leading_diamond": "\ue0b2",
@@ -280,6 +143,143 @@
             "template": " \ufd31 {{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}} ",
             "trailing_diamond": "<transparent,#316ce4>\ue0b2</>",
             "type": "kubectl"
+          },
+          {
+            "type": "command",
+            "style": "diamond",
+            "leading_diamond": "\ue0b2",
+            "trailing_diamond": "\ue0d1",
+            "background": "#c2e9ff",
+            "foreground": "#c2e9ff",
+            "properties": {
+              "shell": "sh",
+              "command": "cat /sys/class/power_supply/battery/capacity"
+            },
+            "template": "-"
+          },
+          {
+            "type": "text",
+            "style": "diamond",
+            // "leading_diamond": "\ue0d4",
+            "trailing_diamond": "\ue0b4",
+            "foreground": "#02612c",
+            "background": "#c2e9ff",
+            "template": " {{ .UserName }} \uf1fa {{ .HostName }} "
+          },
+          {
+            "foreground": "#f1f1f1",
+            "style": "plain",
+            "template": "\u2500\u256e ",
+            "type": "text"
+          }
+        ],
+        "type": "prompt"
+      },
+      {
+        "alignment": "left",
+        "newline": true,
+        "segments": [
+          {
+            "background": "#ffeb95",
+            "foreground": "#011627",
+            "properties": {
+              "windows": "\uf871"
+            },
+            "style": "diamond",
+            "leading_diamond": "\ue0b6",
+            // "trailing_diamond": "\ue0bc",
+            "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}}",
+            "type": "os"
+          },
+          {
+            "background": "#ef5350",
+            "foreground": "#ffeb95",
+            "powerline_symbol": "\ue0bc",
+            "style": "accordion",
+            "template": " \uf292 ",
+            // "trailing_diamond": "\ue0b0",
+            "type": "root"
+          },
+          {
+            "background": "#ffc9c2",
+            "foreground": "#011627",
+            "powerline_symbol": "\ue0bc",
+            "properties": {
+              "folder_separator_icon": " <#011627>\ue0bb</> ",
+              "home_icon": "\uf7db",
+              "folder_icon": "\uf07c",
+              "style": "agnoster"
+            },
+            "style": "accordion",
+            "template": " {{ .Path }} ",
+            "type": "path"
+          },
+          {
+            "background": "#22da6e",
+            "background_templates": [
+              "{{ if or (.Working.Changed) (.Staging.Changed) }}#addb67{{ end }}",
+              "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#f78c6c{{ end }}",
+              "{{ if gt .Ahead 0 }}#21c7a8{{ end }}",
+              "{{ if gt .Behind 0 }}#c792ea{{ end }}"
+            ],
+            "foreground": "#011627",
+            "powerline_symbol": "\ue0bc",
+            "properties": {
+              "branch_icon": "\ue725 ",
+              "fetch_stash_count": true,
+              "fetch_status": true,
+              "fetch_upstream_icon": true,
+              "fetch_worktree_count": true
+            },
+            "style": "accordion",
+            "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \uf692 {{ .StashCount }}{{ end }} ",
+            "type": "git"
+          },
+          {
+            "background": "#575656",
+            "foreground": "#d6deeb",
+            "properties": {
+              "style": "roundrock",
+              "threshold": 0
+            },
+            "style": "diamond",
+            // "leading_diamond": "<transparent,#575656>\ue0b0</>",
+            "trailing_diamond": "\ue0b4",
+            "template": " {{ .FormattedMs }} ",
+            "type": "executiontime"
+          }
+        ],
+        "type": "prompt"
+      },
+      {
+        "alignment": "right",
+        "segments": [
+          {
+            "type": "battery",
+            "style": "diamond",
+            "leading_diamond": "\ue0ba",
+            "foreground": "#193549",
+            "background": "#cfd7ee",
+            "background_templates": [
+              "{{if eq \"Charging\" .State.String}}#40c4ff{{end}}",
+              "{{if eq \"Discharging\" .State.String}}#ff5722{{end}}",
+              "{{if eq \"Full\" .State.String}}#4caf50{{end}}"
+            ],
+            // "template": " {{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }}\uF295 ",
+            "template": " {{ if not .Error }}{{ .Icon }}{{ .Segments.Command.Output }}{{ end }}\uF295 ",
+            "properties": {
+              "discharging_icon": "\uf57f ",
+              "charging_icon": "\uf589 ",
+              "charged_icon": "\uf583 "
+            }
+          },
+          {
+            "background": "#8f43f3",
+            "foreground": "#ffffff",
+            "powerline_symbol": "\ue0bc",
+            "style": "powerline",
+            "template": " \uf85a {{ round .PhysicalPercentUsed .Precision }}% ",
+            "type": "sysinfo"
           },
           {
             "type": "wifi",
