@@ -208,6 +208,10 @@
               "folder_separator_icon": " <#011627>\ue0bb</> ",
               "home_icon": "\uf7db",
               "folder_icon": "\uf07c",
+              "mapped_locations": {
+                "/opt": "\uf08e",
+                "/opt/shell-app": "\ue707"
+              },
               "style": "agnoster"
             },
             "style": "accordion",
