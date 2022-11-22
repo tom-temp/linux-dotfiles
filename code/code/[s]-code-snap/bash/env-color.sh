@@ -1,0 +1,5 @@
+export COLOR_H1_0='\e[1;35;42m'
+export COLOR_H1_1='\e[4;30;46m'
+export COLOR_H2_0='\e[1;35;40m'
+export COLOR_H2_1='\e[1;32;40m'
+export COLOR_END='\e[0m'
