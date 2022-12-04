@@ -41,7 +41,7 @@ SAVEHIST=1000
 # End of lines configured by zsh-newuser-install
 # mkdir -p ~/.config/zsh
 # git clone https://github.com/zdharma-continuum/zinit.git ~/.config/zsh/zinit
-source '/home/tom/.config/zsh/zinit/zinit.zsh'
+source '~/.config/zsh/zinit/zinit.zsh'
 zinit ice depth=1
 zinit light zsh-users/zsh-autosuggestions
 zinit light zdharma/fast-syntax-highlighting
@@ -57,7 +57,7 @@ zinit snippet OMZ::plugins/jsontools/jsontools.plugin.zsh     # pp_json, is_json
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # custom app alias
-source .config/zsh/custom_shellapp.zsh
+source ~/.config/zsh/custom_shellapp.zsh
 
 
 case "${TERM}" in
