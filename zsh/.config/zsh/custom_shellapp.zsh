@@ -1,9 +1,9 @@
 export MAIN_DIR=/opt
-MAPP_DIR=${MAIN_DIR}/shell-app
+SAPP_DIR=${MAIN_DIR}/app-shell
 
 # 环境变量
-export MAPP_DIR=${MAPP_DIR}
-export PATH=$PATH:${MAPP_DIR}/bin
+export SAPP_DIR=${SAPP_DIR}
+export PATH=$PATH:${SAPP_DIR}/bin
 
 export COLOR_H1_0='\e[1;35;42m'
 export COLOR_H1_1='\e[4;30;46m'
@@ -11,7 +11,7 @@ export COLOR_H2_0='\e[1;35;40m'
 export COLOR_H2_1='\e[1;32;40m'
 export COLOR_END='\e[0m'
 
-export GITULS=http://github.opsp.eu.org/
+export GITUL=http://github.opsp.eu.org/
 
 # default programe
 # export EDITOR='/usr/bin/vim'
@@ -58,16 +58,16 @@ if [ "$(command -v trash)" ]; then
 fi
 
 # rust环境变量
-export CARGO_HOME=${MAPP_DIR}/_env_make/rust-cargo
-export RUSTUP_HOME=${MAPP_DIR}/_env_make/rust-main
-CARGO=${MAPP_DIR}/_env_make/rust-cargo/bin
+export CARGO_HOME=${SAPP_DIR}/_env_make/rust-cargo
+export RUSTUP_HOME=${SAPP_DIR}/_env_make/rust-main
+CARGO=${SAPP_DIR}/_env_make/rust-cargo/bin
 CARGO_HTTP_MULTIPLEXING=false
-# . "${MAPP_DIR}/_env_make/rust-cargo/env"
+# . "${SAPP_DIR}/_env_make/rust-cargo/env"
 
 # completion
-# sudo ln -s ${MAPP_DIR}/zoxide/completions/_zoxide /usr/share/zsh/site-functions/
-# source ${MAPP_DIR}/zoxide/completions/zoxide.bash
-# sudo ln -s $MAPP_DIR/lsd/autocomplete/_lsd /usr/share/zsh/site-functions
+# sudo ln -s ${SAPP_DIR}/zoxide/completions/_zoxide /usr/share/zsh/site-functions/
+# source ${SAPP_DIR}/zoxide/completions/zoxide.bash
+# sudo ln -s $SAPP_DIR/lsd/autocomplete/_lsd /usr/share/zsh/site-functions
 
 alias supervisorctl='/opt/local-app/supervisord/supervisord ctl -s http://127.0.0.1:18080 -u tom -P 111'
 
