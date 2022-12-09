@@ -1,6 +1,6 @@
 
 export GITPROXY="https://"
-export Make_env="$HOME/.local/_env_make"
+export Make_env="$HOME/_env_make"
 
 mkdir -p ${Make_env}
 mkdir -p ~/.config/profile_dir
@@ -19,8 +19,8 @@ export COLOR_END='\e[0m'
 
 # environment ----------------------------------------------------------------------------
 export PATH=$PATH:${Make_env}/go/bin
-echo "export Make_env=$Make_env"            >> ~/.config/profile_dir/golang.profile
-echo 'export PATH=$PATH:${Make_env}/go/bin' >> ~/.config/profile_dir/golang.profile
+echo "export GOlang_env=$Make_env"            >> ~/.config/profile_dir/golang.profile
+echo 'export PATH=$PATH:${GOlang}/go/bin'     >> ~/.config/profile_dir/golang.profile
 
 echo "go long has installed"
 go version
