@@ -1,8 +1,6 @@
-
-git config --global core.autocrlf true
+# windows
 git config --global core.autocrlf input
-git config --global core.autocrlf false
 
-git config --global core.safecrlf true
-git config --global core.safecrlf false
-git config --global core.safecrlf warn
+# voidlinux
+xbps-install fuse curl wget vim exa zoxide procs dust
+xbps-install bottom
