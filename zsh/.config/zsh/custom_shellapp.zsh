@@ -1,4 +1,6 @@
 export MAIN_DIR=/opt
+export WAPP_DIR="$MAIN_DIR/app-webgo"
+
 SAPP_DIR=${MAIN_DIR}/app-shell
 
 # 环境变量
@@ -14,17 +16,27 @@ export COLOR_END='\e[0m'
 export GITUL=http://github.opsp.eu.org/
 
 # default programe
-# export EDITOR='/usr/bin/vim'
+export EDITOR='/usr/bin/vim'
 
-
-# oh-my-posh
-# sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
-# sudo chmod +x /usr/local/bin/oh-my-posh
-if [ "$(command -v oh-my-posh)" ]; then
-  eval "$(oh-my-posh init zsh --config ~/.config/zsh/my-night-owl.omp.json )"
+# xbps
+if [ "$(command -v xbps-install)" ]; then
+  alias xbps-install='sudo xbps-install -S && sudo xbps-install'
 fi
 
-# 命令设置
+
+# theme =======================================================================================================================
+# starship
+if [ "$(command -v starship)" ]; then
+  eval "$(starship init zsh)"
+fi
+
+# sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+# sudo chmod +x /usr/local/bin/oh-my-posh
+# if [ "$(command -v oh-my-posh)" ]; then
+#   eval "$(oh-my-posh init zsh --config ~/.config/zsh/my-night-owl.omp.json )"
+# fi
+
+# 命令设置 =======================================================================================================================
 HISTTIMEFORMAT="[%m-%d %H:%M] "
 
 # ls命令
@@ -38,7 +50,6 @@ if [ "$(command -v lsd)" ]; then
     alias lsa='lsd -aX --group-dirs first'
     alias lss='lsd -laX --group-dirs first'
     alias lst='lsd --tree --group-dirs first --depth 2'
-
 fi
 if [ "$(command -v zoxide)" ]; then
     eval "$(zoxide init zsh)"
@@ -57,11 +68,11 @@ if [ "$(command -v trash)" ]; then
     alias rml='trash-list'
 fi
 
-# rust环境变量
+# rust环境变量 ==================================================================================================================
+export CARGO_HTTP_MULTIPLEXING=false
 export CARGO_HOME=${SAPP_DIR}/_env_make/rust-cargo
 export RUSTUP_HOME=${SAPP_DIR}/_env_make/rust-main
 CARGO=${SAPP_DIR}/_env_make/rust-cargo/bin
-CARGO_HTTP_MULTIPLEXING=false
 # . "${SAPP_DIR}/_env_make/rust-cargo/env"
 
 # completion
@@ -69,5 +80,5 @@ CARGO_HTTP_MULTIPLEXING=false
 # source ${SAPP_DIR}/zoxide/completions/zoxide.bash
 # sudo ln -s $SAPP_DIR/lsd/autocomplete/_lsd /usr/share/zsh/site-functions
 
-alias supervisorctl='/opt/local-app/supervisord/supervisord ctl -s http://127.0.0.1:18080 -u tom -P 111'
+alias supervisorctl="$WAPP_DIR/supervisord/supervisord ctl -s http://127.0.0.1:18080 -u tom -P  tom-tom@"
 
