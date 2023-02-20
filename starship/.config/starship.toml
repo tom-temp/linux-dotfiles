@@ -1,54 +1,44 @@
-continuation_prompt = "In\\[=\\]>:"
+continuation_prompt = "[❯](bold white)"
 
 format = """
-$container$username$hostname$jobs\
-$localip$shlvl$singularity$kubernetes\
-$directory$battery\
-$vcsh\
-$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch\
-$docker_context$package$buf$c$cmake$cobol$dart$deno$dotnet$elixir$elm$erlang$golang$haskell$helm$java$julia$kotlin$lua$nim$nodejs$ocaml$perl$php$pulumi$purescript$python$rlang$red$ruby$rust$scala$swift$terraform$vlang$vagrant$zig$nix_shell$conda$spack$memory_usage$aws$gcloud$openstack$azure$env_var$crystal$custom\
-$sudo\
-$cmd_duration\
+[](bg:#c4265e fg:#ae81ff)\
+$localip$battery\
+[](bg:#212736 fg:#c4265e)\
+$container\
+$nodejs\
+$rust\
+$golang\
+$php\
+$python\
+$conda\
+[](fg:#212736 bg:#a3aed2)\
+[](fg:#a3aed2)\
+$docker_context$package$buf$c$cmake$cobol$dart$deno$dotnet$elixir$elm$erlang$haskell$helm$java$julia$kotlin$lua$nim$ocaml$perl$pulumi$purescript$python$rlang$red$ruby$scala$swift$terraform$vlang$vagrant$zig$nix_shell$spack$memory_usage$aws$gcloud$openstack$azure$env_var$crystal$custom\
+
+\n\
+[  ](bg:#a3aed2 fg:#090c0c)\
+[](bg:#769ff0 fg:#a3aed2)\
+$directory\
+[](fg:#769ff0 bg:#394260)\
+$git_branch\
+$git_status\
+[](fg:#394260 bg:#1d2230)\
 $time\
-$line_break\
-$status\
-$shell\
+[ ](fg:#1d2230)\
+
+\n\
 $character"""
+right_format = '''$jobs$cmd_duration'''
 
-[container]
-symbol = ""
-format = "[$symbol](bg:#FF5655)"
-
-[username]
-style_user = "#282A36 bold"
-style_root = "#FF5655 bold"
-# format = "[ $user](fg:$style bg:#6273A4)"
-format = "[](fg:$style bg:#F8F8F2)[$user](fg:$style bg:#F8F8F2)"
-disabled = false
-show_always = true
-[hostname]
+# first -------------------------------------------------------------------------------------
+[localip]
+style = "fg:#e3e5e5 bg:#c4265e"
 ssh_only = false
-# format =  "[ @ $hostname ](fg:#F1FA8C bg:#6273A4)[](fg:#6273A4 bg:#ffb86c)"
-format =  "[  $hostname ](fg:#282A36 bg:#F8F8F2)[](fg:#ffb86c bg:#F8F8F2)"
-trim_at = "."
+format = '[ 󰱓 $localipv4 ]($style)'
 disabled = false
-
-[jobs]
-symbol = "✦"
-style = "fg:blue bg:#ffb86c"
-number_threshold = 2
-symbol_threshold = 1
-format = "[$symbol$number]($style)"
-
-[directory]
-home_symbol="~"
-truncation_length=5
-read_only=""
-read_only_style="fg:#F8F8F2"
-# format="[ $read_only]($read_only_style bg:#ffb86c)[📂 $path ](fg:#282a36 bg:#ffb86c)[](fg:#ffb86c) "
-format="[$read_only]($read_only_style bg:#ffb86c)[ 📂 $path ](fg:#282a36 bg:#ffb86c)[](fg:#ffb86c) "
 
 [battery]
+style = "fg:#e3e5e5 bg:#c4265e"
 full_symbol = "🔋 "
 # charging_symbol = "⚡️ "
 discharging_symbol = "💧 "
@@ -61,8 +51,87 @@ style = "bold red"
 discharging_symbol = ""
 
 
+[directory]
+style = "fg:#e3e5e5 bg:#769ff0"
+truncation_length = 5
+read_only=""
+read_only_style="fg:#c4265e bg:#769ff0"
+truncation_symbol = "…/"
+format="[ $read_only]($read_only_style)[ $path ]($style)"
+
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+
+[git_status]
+style = "bg:#394260"
+format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
+
+
+[time]
+disabled = false
+time_format = "%m-%d %R" # Hour:Minute Format
+style = "bg:#1d2230"
+format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+
 [character]
 success_symbol="[❯](bold green)"
 error_symbol="[❯](bold red)"
 vicmd_symbol="[❮](bold green)"
-format="[In\\[$symbol\\]=:](fg:#f1fa8c)"
+
+
+# right_format
+[jobs]
+symbol = "✦"
+# style = "fg:blue bg:#ffb86c"
+number_threshold = 2
+symbol_threshold = 1
+format = "[$symbol$number]($style)"
+
+[cmd_duration]
+format = '[\[$duration\]](yellow)'
+min_time = 1
+show_milliseconds = true
+
+
+# code environment
+[container]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ](fg:#769ff0 bg:#212736)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[golang]
+symbol = "ﳑ"
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[php]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[python]
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[conda]
+style = "bg:#212736"
+format = '[[ $symbol ($environment) ](fg:#769ff0 bg:#212736)]($style)'
