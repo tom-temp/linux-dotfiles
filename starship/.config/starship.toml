@@ -2,7 +2,7 @@ continuation_prompt = "[❯](bold white)"
 
 format = """
 [](bg:#c4265e fg:#ae81ff)\
-$localip$battery\
+$localip\
 [](bg:#212736 fg:#c4265e)\
 $container\
 $nodejs\
@@ -12,8 +12,10 @@ $php\
 $python\
 $conda\
 [](fg:#212736 bg:#a3aed2)\
-[](fg:#a3aed2)\
-$docker_context$package$buf$c$cmake$cobol$dart$deno$dotnet$elixir$elm$erlang$haskell$helm$java$julia$kotlin$lua$nim$ocaml$perl$pulumi$purescript$python$rlang$red$ruby$scala$swift$terraform$vlang$vagrant$zig$nix_shell$spack$memory_usage$aws$gcloud$openstack$azure$env_var$crystal$custom\
+[](fg:#a3aed2 bg:#ff8000)\
+$docker_context$package$buf$c$cmake$cobol$dart$deno$dotnet$elixir$elm$erlang$haskell$helm$java$julia$kotlin$lua$nim$ocaml$perl$pulumi$purescript$python$rlang$red$ruby$scala$swift$terraform$vlang$vagrant$zig$nix_shell$spack$memory_usage$aws$gcloud$openstack$azure$env_var$crystal\
+$battery$custom\
+[](fg:#ff8000)\
 
 \n\
 [  ](bg:#a3aed2 fg:#090c0c)\
@@ -31,28 +33,34 @@ $character"""
 right_format = '''$jobs$cmd_duration'''
 
 # first -------------------------------------------------------------------------------------
+[custom.aabb]
+symbol = "🔋"
+style  = "fg:#e3e5e5 bg:#ff8000"
+format  = '[($output)%]($style)'
+command = 'cat /sys/class/power_supply/battery/capacity'
+use_stdin = true
+detect_folders = ['.config']
+
 [localip]
 style = "fg:#e3e5e5 bg:#c4265e"
 ssh_only = false
-format = '[ 󰱓 $localipv4 ]($style)'
+format = '[  $localipv4 ]($style)'
 disabled = false
 
 [battery]
-style = "fg:#e3e5e5 bg:#c4265e"
-full_symbol = "🔋 "
-# charging_symbol = "⚡️ "
-discharging_symbol = "💧 "
-# format = "[$symbol$percentage]($style) "
-format = "[$symbol]($style) "
+full_symbol = "🔋"
+charging_symbol = "⚡️"
+discharging_symbol = "💧"
+# format = '[$symbol$percentage]($style) '
+format = "[ $symbol]($style)"
 disabled = false
 [[battery.display]]
 threshold = 10
-style = "bold red"
-discharging_symbol = ""
+style = "fg:#e3e5e5 bg:#ff8000"
 
-
+# second -------------------------------------------------------------------------------------
 [directory]
-style = "fg:#e3e5e5 bg:#769ff0"
+style = "fg:#000000 bg:#769ff0"
 truncation_length = 5
 read_only=""
 read_only_style="fg:#c4265e bg:#769ff0"
