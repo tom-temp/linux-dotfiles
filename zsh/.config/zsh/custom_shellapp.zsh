@@ -68,6 +68,11 @@ if [ "$(command -v trash)" ]; then
     alias rml='trash-list'
 fi
 
+# conda环境变量 ==================================================================================================================
+if [ "$(command -v condazshstart)" ]; then
+    alias condainit='source condazshstart'
+fi
+
 # rust环境变量 ==================================================================================================================
 export CARGO_HTTP_MULTIPLEXING=false
 export CARGO_HOME=${SAPP_DIR}/_env_make/rust-cargo
