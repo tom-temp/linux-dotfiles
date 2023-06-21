@@ -49,6 +49,7 @@ zinit ice depth=1
 # custom app alias
 source ~/.config/zsh/custom_shellapp.zsh
 source ~/.config/zsh/zinit-mod.zsh
+source ~/.config/path_custom.zsh
 
 case "${TERM}" in
   cons25*|linux) # plain BSD/Linux console
