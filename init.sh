@@ -19,7 +19,7 @@ xbps-install starship exa lsd zoxide ripgrep procs dust fd zsh
 
 mkdir -p ~/.config/zsh
 git clone --depth=1 https://github.com/zdharma-continuum/zinit.git ~/.config/zsh/zinit
-
+touch ~/.config/path_custom.zsh
 
 # gpu
 xbps-install nvtop python3-pipx
