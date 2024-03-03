@@ -39,18 +39,23 @@ fi
 # 命令设置 =======================================================================================================================
 HISTTIMEFORMAT="[%m-%d %H:%M] "
 
+alias rmdel='rm'
+alias rm='adfadfadsfasdf'
+
 # ls命令
 if [ "$(command -v exa)" ]; then
-    alias ll='exa -l --color always -a -s type'
-    alias ls='exa'
-    alias tree='exa -T'
+    alias ll='exa -l --color always -a -s type --icons'
+    alias ls='exa -s type --icons'
+    alias tree='exa -T --icons -L 2 -s type'
+    alias lst='exa -T --icons -L 2 -s type'
+    alias lln='exa -l --color always -a -s type '
+    alias lsn='exa -s type'
 fi
-if [ "$(command -v lsd)" ]; then
-    alias lsd='lsd'
-    alias lsa='lsd -aX --group-dirs first'
-    alias lss='lsd -laX --group-dirs first'
-    alias lst='lsd --tree --group-dirs first --depth 2'
-fi
+# if [ "$(command -v lsd)" ]; then
+#     alias lsd='lsd -Al --group-dirs first'
+#     alias lsa='lsd -AXl --group-dirs first'
+#     alias lst='lsd --tree --group-dirs first --depth 2'
+# fi
 if [ "$(command -v zoxide)" ]; then
     eval "$(zoxide init zsh)"
 fi

@@ -15,7 +15,7 @@ xbps-install fuse curl wget vim exa zoxide procs dust glow vsv
 xbps-install bottom
 
 # zsh environment
-xbps-install starship exa lsd zoxide ripgrep procs dust fd zsh
+xbps-install starship exa lsd zoxide ripgrep procs dust fd zsh viu
 
 mkdir -p ~/.config/zsh
 git clone --depth=1 https://github.com/zdharma-continuum/zinit.git ~/.config/zsh/zinit
