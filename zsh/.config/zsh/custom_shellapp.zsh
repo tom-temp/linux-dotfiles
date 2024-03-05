@@ -5,7 +5,7 @@ SAPP_DIR=${MAIN_DIR}/app-shell
 
 # 环境变量
 export SAPP_DIR=${SAPP_DIR}
-export PATH=$PATH:${SAPP_DIR}/bin
+export PATH=$PATH:${SAPP_DIR}/bin:$HOME/.local/bin
 
 export COLOR_H1_0='\e[1;35;42m'
 export COLOR_H1_1='\e[4;30;46m'
@@ -27,9 +27,15 @@ fi
 # theme =======================================================================================================================
 # starship
 if [ "$(command -v starship)" ]; then
-  eval "$(starship init zsh)"
+    eval "$(starship init zsh)"
 fi
-
+# atuin
+if [ "$(command -v atuin)" ]; then
+    export ATUIN_NOBIND="true"
+    eval "$(atuin init zsh)"
+    # eval "$(atuin init zsh --disable-up-arrow)"
+    bindkey '^f' atuin-search
+fi
 # sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
 # sudo chmod +x /usr/local/bin/oh-my-posh
 # if [ "$(command -v oh-my-posh)" ]; then
@@ -40,7 +46,7 @@ fi
 HISTTIMEFORMAT="[%m-%d %H:%M] "
 
 alias rmdel='rm'
-alias rm='adfadfadsfasdf'
+# alias rm='adfadfadsfasdf'
 
 # ls命令
 if [ "$(command -v exa)" ]; then
@@ -68,9 +74,24 @@ fi
 if [ "$(command -v dust)" ]; then
     alias du='dust'
 fi
-if [ "$(command -v trash)" ]; then
-    alias rm='trash'
-    alias rml='trash-list'
+# if [ "$(command -v trash)" ]; then
+#     alias rm='trash'
+#     alias rml='trash-list'
+# fi
+if [ "$(command -v gtrash)" ]; then
+    alias rm='gtrash put'
+    alias rml='gtrash find /tmp --rm && gtrash f'
+fi
+
+if [ "$(command -v yazi)" ]; then
+    function ya() {
+        local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+        yazi "$@" --cwd-file="$tmp"
+        if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+            cd -- "$cwd"
+        fi
+        rmdel -f -- "$tmp"
+    }
 fi
 
 # conda环境变量 ==================================================================================================================
