@@ -35,6 +35,7 @@ if [ "$(command -v atuin)" ]; then
     eval "$(atuin init zsh)"
     # eval "$(atuin init zsh --disable-up-arrow)"
     bindkey '^f' atuin-search
+    # bindkey '^f' _atuin_search_widget # if atuin <18.0
 fi
 # sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
 # sudo chmod +x /usr/local/bin/oh-my-posh

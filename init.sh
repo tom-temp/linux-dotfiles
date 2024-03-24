@@ -28,8 +28,9 @@ ln -s ~/.config/tmux/layout.default.sh ~/.local/bin/tm
 chmod +x ~/.config/tmux/layout.default.sh
 
 
-
+###############################################################################
 # yazi
+###############################################################################
 xbps-install viu jq atool
 
 sudo mkdir -p ~/.config/yazi/plugins
