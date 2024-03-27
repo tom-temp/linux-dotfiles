@@ -13,8 +13,10 @@ export EDITOR='/usr/bin/vim'
 #==============================================
 # plugs
 #==============================================
-# BLE.SH
-source ~/.local/share/blesh/ble.sh
+# BASHIT
+export SHORT_TERM_LINE=true
+export SHORT_HOSTNAME=$(hostname -s)
+THEME_CHECK_SUDO='true'
 
 #==============================================
 # alias
