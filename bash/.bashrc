@@ -25,9 +25,10 @@ if [ "$(command -v xbps-install)" ]; then
 fi
 
 # atuin
-if [ "$(command -v atuin)" ]; then
+[[ -f /usr/bin/bash-preexec.sh ]] && source /usr/bin/bash-preexec.sh
+[[ -f /usr/bin/bash-preexec.sh ]] && if [ "$(command -v atuin)" ]; then
     export ATUIN_NOBIND="true"
-    eval "$(atuin init zsh)"
+    eval "$(atuin init bash)"
     bind -x '"\C-f": __atuin_history'
 fi
 
