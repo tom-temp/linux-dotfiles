@@ -1,10 +1,18 @@
+#==============================================
+# init
+#==============================================
+# bash bash-it disable alias general
+# bash bash-it enable plugins sudo tmux
+
+#==============================================
 # 环境变量
+#==============================================
 export PATH=$PATH:~/.local/bin
 
 # protmp
-if [ "$(command -v starship)" ]; then
-    eval "$(starship init bash)"
-fi
+# if [ "$(command -v starship)" ]; then
+#     eval "$(starship init bash)"
+# fi
 export PS0='\n\e[100m#==========[out]==========#\[\e[0m\]\n'
 HISTTIMEFORMAT="[%m-%d %H:%M] "
 # default programe
