@@ -23,7 +23,7 @@ export EDITOR='/usr/bin/vim'
 #==============================================
 # BASHIT
 export SHORT_TERM_LINE=true
-export SHORT_HOSTNAME=$(hostname -s)
+export SHORT_HOSTNAME=$(hostname)
 THEME_CHECK_SUDO='true'
 
 #==============================================
@@ -55,7 +55,7 @@ if [ "$(command -v exa)" ]; then
     alias lsn='exa -s type'
 fi
 if [ "$(command -v zoxide)" ]; then
-    eval "$(zoxide init zsh)"
+    eval "$(zoxide init bash)"
 fi
 if [ "$(command -v rg)" ]; then
     alias grep='rg'
