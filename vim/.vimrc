@@ -125,7 +125,7 @@ let g:undotree_DiffAutoOpen = 0
 map \z :UndotreeToggle<CR>
 
 " 主题
-set background=dark
+" set background=dark
 colorscheme elflord
 " colorscheme ron
 
