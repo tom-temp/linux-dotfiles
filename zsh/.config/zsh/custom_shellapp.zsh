@@ -23,6 +23,10 @@ if [ "$(command -v xbps-install)" ]; then
   alias xbps-install='sudo xbps-install -S && sudo xbps-install'
 fi
 
+# brew
+if [ -e "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
 # theme =======================================================================================================================
 # starship
@@ -64,6 +68,7 @@ fi
 #     alias lst='lsd --tree --group-dirs first --depth 2'
 # fi
 if [ "$(command -v zoxide)" ]; then
+    unalias zi || echo "zinit 没有设置zi别名"
     eval "$(zoxide init zsh)"
 fi
 if [ "$(command -v dysk)" ]; then
