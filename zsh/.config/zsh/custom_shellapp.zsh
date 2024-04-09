@@ -66,6 +66,9 @@ fi
 if [ "$(command -v zoxide)" ]; then
     eval "$(zoxide init zsh)"
 fi
+if [ "$(command -v dysk)" ]; then
+    alias lfs='dysk'
+fi
 if [ "$(command -v rg)" ]; then
     alias grep='rg'
 fi
