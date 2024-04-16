@@ -47,11 +47,11 @@ alias rmdel='rm'
 
 # ls命令
 if [ "$(command -v exa)" ]; then
-    alias ll='exa -l --color always -a -s type --icons'
+    alias ll='exa -l --color always -aa -s type --icons'
     alias ls='exa -s type --icons'
     alias tree='exa -T --icons -L 2 -s type'
     alias lst='exa -T --icons -L 2 -s type'
-    alias lln='exa -l --color always -a -s type '
+    alias lln='exa -l --color always -aa -s type '
     alias lsn='exa -s type'
 fi
 if [ "$(command -v zoxide)" ]; then
