@@ -2,7 +2,7 @@ continuation_prompt = "[❯](bold white)"
 
 format = """
 [](bg:#c4265e fg:#ae81ff)\
-$localip$hostname\
+$localip$hostname$username\
 [](bg:#212736 fg:#c4265e)\
 $container\
 $nodejs\
@@ -14,7 +14,7 @@ $conda\
 [](fg:#212736 bg:#a3aed2)\
 [](fg:#a3aed2 bg:#ff8000)\
 $battery$custom\
-[](fg:#ff8000)\
+[ ](fg:#ff8000)\
 $docker_context$package$buf$c$cmake$cobol$dart$deno$dotnet$elixir$elm$erlang$haskell$helm$java$julia$kotlin$lua$nim$ocaml$perl$pulumi$purescript$rlang$red$ruby$scala$swift$terraform$vlang$vagrant$zig$nix_shell$spack$memory_usage$aws$gcloud$openstack$azure$env_var$crystal\
 
 \n\
@@ -47,11 +47,18 @@ ssh_only = false
 format = '[  $localipv4 ]($style)'
 disabled = false
 
+[username]
+style_user = 'white bold'
+style_root = 'black bold'
+format = '[:$user ]($style bg:#c4265e)'
+disabled = false
+show_always = true
+
 [hostname]
 ssh_only = true
 ssh_symbol = "🛸"
 style = "fg:#e3e5e5 bg:#c4265e"
-format = '[$ssh_symbol $hostname ]($style)'
+format = '[$ssh_symbol $hostname]($style)'
 trim_at = '.companyname.com'
 detect_env_vars = ['!notshow', 'SSH_CONNECTION']
 disabled = false
