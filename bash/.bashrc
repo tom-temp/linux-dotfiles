@@ -13,7 +13,7 @@ export PATH=$PATH:~/.local/bin
 # if [ "$(command -v starship)" ]; then
 #     eval "$(starship init bash)"
 # fi
-export PS0='\n\e[100m#==========[out]==========#\[\e[0m\]\n'
+export PS0='\e[100m#==========[out]==========#\[\e[0m\]\n'
 HISTTIMEFORMAT="[%m-%d %H:%M] "
 # default programe
 export EDITOR='/usr/bin/vim'
