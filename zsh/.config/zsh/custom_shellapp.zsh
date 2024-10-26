@@ -91,7 +91,9 @@ if [ "$(command -v gtrash)" ]; then
     alias rm='gtrash put'
     alias rml='gtrash find /tmp --rm && gtrash f'
 fi
-
+if [ "$(command -v macchina)" ]; then
+    alias a='macchina -t Lithium'
+fi
 if [ "$(command -v yazi)" ]; then
     function ya() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXX")"

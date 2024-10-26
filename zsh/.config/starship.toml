@@ -55,12 +55,12 @@ disabled = false
 show_always = true
 
 [hostname]
-ssh_only = true
+ssh_only = false
 ssh_symbol = "🛸"
 style = "fg:#e3e5e5 bg:#c4265e"
 format = '[$ssh_symbol $hostname]($style)'
-trim_at = '.companyname.com'
-detect_env_vars = ['!notshow', 'SSH_CONNECTION']
+# trim_at = '.companyname.com'
+# detect_env_vars = ['!notshow', 'SSH_CONNECTION']
 disabled = false
 
 [battery]
