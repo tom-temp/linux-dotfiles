@@ -57,6 +57,7 @@ if [ "$(command -v fzf)" ]; then
     export FZF_CTRL_T_OPTS='
     --walker-skip .git,node_modules,target
     --preview "[[ $(file --mime {}) =~ binary ]] && echo $COLOR_H1_1{}$COLOR_END is a binary file || bat -n --color always -r :30 {}"'
+    source <(fzf --zsh)
 fi
 # sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
 # sudo chmod +x /usr/local/bin/oh-my-posh
