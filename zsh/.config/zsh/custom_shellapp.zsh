@@ -55,6 +55,7 @@ if [ "$(command -v fzf)" ]; then
     export FZF_COMPLETION_TRIGGER='@@'
     # export FZF_DEFAULT_OPTS='--height 40% --tmux bottom,40% --layout reverse --border top'
     export FZF_CTRL_T_OPTS='
+    --height 50% --tmux bottom,50% --layout reverse --border top
     --walker-skip .git,node_modules,target
     --preview "[[ $(file --mime {}) =~ binary ]] && echo $COLOR_H1_1{}$COLOR_END is a binary file || bat -n --color always -r :30 {}"'
     source <(fzf --zsh)
