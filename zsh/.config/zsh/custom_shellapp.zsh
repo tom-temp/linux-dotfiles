@@ -18,12 +18,13 @@ export GITUL=http://github.opsp.eu.org/
 # default programe
 export EDITOR='/usr/bin/vim'
 
-# xbps
+# package
+## xbps
 if [ "$(command -v xbps-install)" ]; then
   alias xbps-install='sudo xbps-install -S && sudo xbps-install'
 fi
 
-# brew
+## brew
 if [ -e "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
@@ -40,6 +41,22 @@ if [ "$(command -v atuin)" ]; then
     # eval "$(atuin init zsh --disable-up-arrow)"
     bindkey '^f' atuin-search
     # bindkey '^f' _atuin_search_widget # if atuin <18.0
+fi
+if [ "$(command -v fzf)" ]; then
+    # 使用默认程序打开
+    # open $(fzf)
+    # 发送至剪贴板
+    # fzf | tr -d '\n' | tee > (pbcopy)
+    # 多个输出
+    # fzf --multi --bind='ctrl-a:select-all'
+    # fzf --multi --bind='ctrl-a:select-all' --layout=reverse
+    # $ 以什么结尾
+    # ! 取反
+    export FZF_COMPLETION_TRIGGER='@@'
+    # export FZF_DEFAULT_OPTS='--height 40% --tmux bottom,40% --layout reverse --border top'
+    export FZF_CTRL_T_OPTS='
+    --walker-skip .git,node_modules,target
+    --preview "[[ $(file --mime {}) =~ binary ]] && echo $COLOR_H1_1{}$COLOR_END is a binary file || bat -n --color always -r :30 {}"'
 fi
 # sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
 # sudo chmod +x /usr/local/bin/oh-my-posh
