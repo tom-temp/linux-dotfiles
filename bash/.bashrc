@@ -76,9 +76,9 @@ fi
 if [ "$(command -v dust)" ]; then
     alias du='dust'
 fi
-if [ "$(command -v gtrash)" ]; then
-    alias rm='gtrash put'
-    alias rml='gtrash find /tmp --rm && gtrash f'
+if [ "$(command -v gomi)" ]; then
+    alias rm='gomi'
+    alias rml='gomi --restore'
 fi
 
 if [ "$(command -v yazi)" ]; then

@@ -106,9 +106,9 @@ fi
 #     alias rm='trash'
 #     alias rml='trash-list'
 # fi
-if [ "$(command -v gtrash)" ]; then
-    alias rm='gtrash put'
-    alias rml='gtrash find /tmp --rm && gtrash f'
+if [ "$(command -v gomi)" ]; then
+    alias rm='gomi'
+    alias rml='gomi --restore'
 fi
 if [ "$(command -v macchina)" ]; then
     alias a='macchina -t Lithium'
