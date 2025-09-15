@@ -13,15 +13,16 @@ alignment = "left"
 newline = true
 
     [[blocks.segments]]
-    template = "|Pys: {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} |"
-    foreground = "p:black"
+    template = "  : {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} "
+    foreground = "p:white"
     background = "#306998"
+    # powerline_symbol = ""
     type = "python"
-    style = "diamond"
+    style = "powerline"
 
         [blocks.segments.properties]
         cache_duration = "none"
-        display_mode = "environment"
+        display_mode = "context"
         fetch_virtual_env = true
         home_enabled = false
 
@@ -31,7 +32,7 @@ alignment = "left"
 newline = true
 
     [[blocks.segments]]
-    template = " {{.Icon}}{{if .WSL}} (WSL){{end}} "
+    template = "{{.Icon}}{{if .WSL}} (WSL){{end}} "
     foreground = "p:white"
     background = "#464646"
     type = "os"

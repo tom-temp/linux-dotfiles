@@ -120,6 +120,10 @@ if [ "$(command -v yazi)" ]; then
     }
 fi
 
+# conda环境变量 ==================================================================================================================
+
+alias condainit='source ~/Project-DL/Miniforge/bin/activate'
+alias amamba='source ~/Project-DL/Miniforge/bin/activate'
 
 # rust环境变量 ==================================================================================================================
 export CARGO_HTTP_MULTIPLEXING=false
