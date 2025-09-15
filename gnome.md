@@ -16,8 +16,8 @@ vim /etc/locale.conf
 ## 安装字体与显卡驱动
 ```sh
 sudo pacman -S wqy-zenhei  noto-fonts-emoji ttf-hack-nerd ttf-liberation openssh vim linux-headers # noto-fonts
-sudo pacman -S mesa mesa-utils
-sudo pacman -S vulkan-intel lib32-vulkan-intel vulkan-tools # lib32-vulkan-virtio
+sudo pacman -S mesa mesa-utils vulkan-mesa-layers
+sudo pacman -S vulkan-intel lib32-vulkan-intel vulkan-tools 
 sudo pacman -S libvdpau-va-gl  #将ffmpeg对nvidia的以来转移到intel gpu上
 sudo pacman -S intel-gpu-tools # gputop 查看gpu使用
 # sudo pacman -S xf86-video-intel intel-media-driver
@@ -25,6 +25,7 @@ sudo pacman -S intel-gpu-tools # gputop 查看gpu使用
 # 虚拟机下安装驱动
 sudo pacman -S  open-vm-tools xf86-input-vmmouse mesa vulkan-mesa-layers lib32-vulkan-mesa-layers vulkan-tools xf86-video-vesa
 systemctl enable sshd vmtoolsd vmware-vmblock-fuse
+# lib32-vulkan-virtio pacman -S 
 
 # 查看vulkan与opengl输出
 vulkaninfo
@@ -56,13 +57,12 @@ pacman -S  flatpak gnome-software
 systemctl start gdm
 systemctl enable gdm
 
-pacman -S gvfs-smb menulibre timeshift 
+pacman -S gvfs-smb menulibre 
 paru -S nautilus-hide
 # xdg-user-dirs-update
 ```
 - gvfs-smb 文件夹smba支持
 - menulibre 想隐藏的图标
-- timeshift 快照服务
 
 
 ## 安装声音与网络配置固件 与 服务
@@ -90,33 +90,38 @@ sudo systemctl enable --now bluetooth.service
 
 ## 桌面软件
 ```
-sudo pacman -S mission-center gnome-text-ditor gnome-disk-utility gnome-clocks gnome-calculator loupe snapshot showtime file-roller zen-browser zen-browser-i18n-zh-cn gst-plugin-pipewire gst-plugins-good amberol gnome-calendar
-paru -S microsoft-edge-stable-bin
+sudo pacman -S mission-center gnome-text-ditor gnome-disk-utility gnome-clocks gnome-calculator loupe snapshot showtime file-roller zen-browser zen-browser-i18n-zh-cn gst-plugin-pipewire gst-plugins-good amberol gnome-calendar evince
+paru -S microsoft-edge-stable-bin mpv
 paru -S 
 paru -S appimagelauncher
 ```
 
 - mission-center 类似win11的任务管理器
-#gnome-text-ditor记事本
-#gnome-disk-utility磁盘管理
-#gnome-clocks时钟
-#gnome-calculator计算器
-#loupe图像查看
-#snapshot相机，摄像头
-#showtime 极度简洁的视频播放器，要强大功能可以用MPV,不推荐使用VLC
-#file-roller解压
-#gst-plugin-pipewire gst-plugins-good gnome截图工具自带的录屏，需登出
-#amberol 音乐播放器
-
+- gnome-text-ditor记事本
+- gnome-disk-utility磁盘管理
+- gnome-clocks时钟
+- gnome-calculator计算器
+- loupe图像查看
+- snapshot相机，摄像头
+- showtime 极度简洁的视频播放器，要强大功能可以用MPV,不推荐使用VLC
+- file-roller解压
+- gst-plugin-pipewire gst-plugins-good gnome截图工具自带的录屏，需登出
+- amberol 音乐播放器
+- evince 通用文件查看，文件中空格查看
 - zen-browser zen-browser-i18n-cn 基于firefox的浏览器和cn语言包
   - zen浏览器一定要在设置>zen模组里面安装transparent zen模组，可以获得特别流畅的动画效果
 
 ### 未安装
-#evince 通用文件查看，比如pdf等
-#baobab磁盘使用情况分析工具，
-#fragments是符合gnome设计理念的种子下载器
-#foliate 电子书阅读器
-
+- baobab磁盘使用情况分析工具，
+- fragments是符合gnome设计理念的种子下载器
+- foliate 电子书阅读器
+- papers 精简的pdf阅读器
+- linuxqq-appimage 是appimgae版qq
+- wechat-appimage 是appimage版微信
+- wps-office-cn 是wps
+- wps-office-mui-zh-cn 是wps的中文语言包
+- typora-free 是markdown编辑器
+- albert 是一个启动器，类似plasma的kruner。在桌面弹出一个置顶的搜索框，有一系列功能
 ## sublime
 > https://blog.csdn.net/yelon_/article/details/130831525
 
@@ -136,6 +141,17 @@ paru -S appimagelauncher
 flatpak run be.alexandervanhee.gradia --screenshot=INTERACTIVE
 ```
 - refine 分数缩放 ，可变刷新率
+- gpu_screen_recorder 类似nvidiaApp的录屏软件
+
+
+## 关于字体
+
+从网上搜索常用办公字体，下载解压后存放到~/.local/share/fonts里面（在这个目录下新建文件夹整理字体文件）。放进去之后刷新字体缓存 。
+```bash
+fc-cache --force
+```
+
+
 
 ## open in any terminal
 
@@ -144,26 +160,40 @@ flatpak run be.alexandervanhee.gradia --screenshot=INTERACTIVE
 这是一个在文件管理器“右键在此处打开终端”的功能
 
 - 如果用的是ghostty
-```
+```bash
 sudo pacman -S nautilus-python
-```
-- 其他终端仿真器
-```
+
+# 其他终端仿真器
 yay -S nautilus-open-any-terminal 
-```
-```
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas 
-```
-```
 sudo pacman -S dconf-editor
-```
-```
-修改配置，路径为/com/github/stunkymonkey/nautilus-open-any-terminal
-```
-- 重载nautilus
-```
+
+# 修改配置，路径为/com/github/stunkymonkey/nautilus-open-any-terminal
+# 重载nautilus
 nautilus -q 
 ```
+
+
+# 视频播放器开启硬件编解码
+1. 方法一：配置文件
+
+编辑mpv配置文件（记得打开一次mpv生成目录）
+```bash
+vim ~/.config/mpv/mpv.config
+
+# 写入：
+#使用vulkan后端
+gpu-api=vulkan
+#通用自动模式硬解
+hwdec=auto-safe
+```
+celluloid首选项的配置文件页面，激活“加载mpv配置文件”，手动指定一下路径
+2. 方法二：celluloid首选项
+
+在首选项的杂项页面写入
+
+hwdec=yes
+
 
 # 美化
 sudo pacman -S  gnome-tweaks
@@ -190,6 +220,18 @@ flatpak 商店安装 ExtensionManager
 14. Arch Linux Updates Indicator 在面板上显示一个和arch更新相关的图标
 15. quick close in overview  在概览里面不用点窗口右上角的叉关闭窗口了，而是使用鼠标中键
 16. bottom overview 鼠标滑到屏幕底部边缘激活概览
+17. logo menu 在面板显示一个logo，好玩
+18. desktop cube 把工作区切换从平铺变成一个可以旋转的方块的面。设置的overview里把透明度（opacity）都改成50%，超级酷！
+19. rounded window corners reborn 让所有窗口变成圆角。这个扩展是真神。 设置里取消激活skip libadwaita applications，然后把corner radius改成14，这样就和gnome的圆角没区别了
+20. desktop icons ng
+实现windows那样的桌面快捷方式。如果快捷方式打了个叉让你设置执行权限的话在终端去到~/Desktop目录，然后运行这个命令设置相信元数据。这是gnome的一个安全措施。
+```bash
+gio set ~/Desktop/*.desktop "metadata::trusted" true
+```
+
+21. 可选：arcmenu 这是功能强大的开始菜单扩展。需要pacman安装gnome-menus。
+
+22. 可选：just perfection 功能强大的自定义扩展，可以设置gnome各个元素的开关。不过根据gnome版本的不同能设置的选项会有所不同，稳定性堪忧。
 
 ## 快捷键
 右键桌面打开设置，选择键盘>查看及自定义快捷键
@@ -245,8 +287,7 @@ super+shift+S   flatpak run be.alexandervanhee.gradia --screenshot=INTERACTIVE
 sudo pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-mozc
 ```
 mozc是g谷歌日语输入法的开源版本
-- 安装gnome扩展：input method panel
-https://extensions.gnome.org/extension/261/kimpanel/
+- 安装gnome扩展：[input method panel](https://extensions.gnome.org/extension/261/kimpanel/)
 - 在fcitx5配置里面添加输入法，没有的话登出重新载入一次
 - 编辑环境变量
 ```bash
