@@ -133,7 +133,7 @@ paru -S appimagelauncher
 ## flap 商店
 - gradia
 - refine
-
+- Flatseal 管理flatpak应用的权限、环境变量之类的
 - gradia编辑截图使用方法
 可以对截图进行一些简单的添加文字、马赛克、图表、背景之类的操作
 设置自定义快捷键的时候命令写：
@@ -195,6 +195,29 @@ celluloid首选项的配置文件页面，激活“加载mpv配置文件”，�
 hwdec=yes
 
 
+# 快照 snapper
+```bash
+sudo pacman -S snapper snap-pac btrfs-assistant
+sudo btrfs subvolume create .snapshots
+````
+
+- snapper 是创建快照的主要程序
+- snap-pac 是利用钩子在进行一些pacman命令的时候自动创建快照
+- btrfs-assistant 是图形化管理btrfs和快照的软件
+
+# 自动生成快照启动项
+```bash
+sudo pacman -S grub-btrfs inotify-tools
+reboot
+sudo systemctl enable --now grub-btrfsd
+```
+具体使用方法
+1. 打开btrfs assistant，切换到snapper settings页面。
+2. 我们创建子卷的时候至少创建了一个@子卷和一个@home子卷，所以需要两个config（配置）。创建一个root配置，再创建一个home配置。
+3. 然后到snapper页面下的New/Delete页面就可以新建和管理快照了，Browse/Restore页面选中快照后点restore可以恢复到那个快照的状态。
+4. 如果你要同时快照root和home的话就分别创建一个root快照和home快照，恢复的时候各自恢复就行了。
+
+
 # 美化
 sudo pacman -S  gnome-tweaks
 
@@ -237,7 +260,7 @@ gio set ~/Desktop/*.desktop "metadata::trusted" true
 右键桌面打开设置，选择键盘>查看及自定义快捷键
 我的配置：
 
-* 导航
+- 导航
 ```
 super+shift+数字键 #将窗口移到工作区
 super+shift+A/D #将窗口左右移动工作区
@@ -247,7 +270,7 @@ alt+tab #切换应用程序
 super+M #隐藏所有正常窗口
 alt+` #在应用程序的窗口之间切换窗口
 ```
-* 截图
+- 截图
 ```
 ctrl+alt+A #交互式截图
 ```
@@ -256,22 +279,22 @@ ctrl+alt+A #交互式截图
 禁用快捷键
 在fcitx5的configtool里面设置super+space切换输入法
 ```
- * 无障碍
+- 无障碍
 ```
 全部backspace退格键禁用
 ```
-* 窗口
+- 窗口
 ```
 super+Q #关闭窗口
 super+F #切换最大化
 super+alt+F #切换全屏
 ```
-* 系统
+- 系统
 ```
 ctrl+super+S #打开快速设置菜单
 super+G #显示全部应用
 ```
-* 自定义快捷键<快捷键>   <命令>
+- 自定义快捷键<快捷键>   <命令>
 ```
 super+B   zen
 super+T   ghostty
@@ -282,25 +305,42 @@ super+shift+S   flatpak run be.alexandervanhee.gradia --screenshot=INTERACTIVE
 
 # 输入法
 
-### fcitx5
+## fcitx5
 ```
-sudo pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-mozc
+sudo pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-rime rime-ice-pinyin-git # fcitx5-mozc 
 ```
-mozc是g谷歌日语输入法的开源版本
+1. mozc是g谷歌日语输入法的开源版本
+2. fcitx5-rime是输入法引擎
+3. rime-ice-pinyin-git是雾凇拼音输入法
+
+### 设置为雾凇输入法
+编辑rime的配置文件设置输入法方案为雾凇拼音，如果没有文件夹和文件的话自己创建文件夹，然后编辑配置文件
+``` bash
+vim ~/.local/share/fcitx5/rime/default.custom.yaml 
+
+# 写入
+patch:
+  # 这里的 rime_ice_suggestion 为雾凇方案的默认预设
+  __include: rime_ice_suggestion:/
+``
+
+### 其他设置
 - 安装gnome扩展：[input method panel](https://extensions.gnome.org/extension/261/kimpanel/)
 - 在fcitx5配置里面添加输入法，没有的话登出重新载入一次
 - 编辑环境变量
 ```bash
 sudo vim /etc/environment
 
-GTK_IM_MODULE=fcitx 
-QT_IM_MODULE=fcitx 
+XIM="fcitx" #解决wechat用不了输入法的问题
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
+XDG_CURRENT_DESKTOP=GNOME #解决某些软件里面输入法吞字的问题
 ```
 重启电脑
 
 
-#### wps用不了fcitx5
+### wps用不了fcitx5
 由于wps自身的问题，我们需要手动设置变量：
 - 文字 (Writer): `/usr/bin/wps`
 - 表格 (Spreadsheets): `/usr/bin/et`
