@@ -322,14 +322,13 @@ hwdec=yes
 
 # 快照 snapper
 ```bash
-sudo pacman -S snapper snap-pac btrfs-assistant
-sudo btrfs subvolume create .snapshots
+sudo pacman -S snapper btrfs-assistant
+sudo btrfs subvolume create /.snapshots # 只在@子卷（root）创建镜像
 ````
 
 - snapper 是创建快照的主要程序
-- snap-pac 是利用钩子在进行一些pacman命令的时候自动创建快照
 - btrfs-assistant 是图形化管理btrfs和快照的软件
-
+- snap-pac 是利用钩子在进行一些pacman命令的时候自动创建快照
 # 自动生成快照启动项
 ```bash
 sudo pacman -S grub-btrfs inotify-tools
@@ -345,6 +344,9 @@ sudo systemctl enable --now grub-btrfsd
 
 # 美化
 sudo pacman -S  gnome-tweaks
+paru -S la-capitaine-icon-theme
+sudo pacman -S gnome-shell-extension-appindicator gnome-shell-extension-caffeine gnome-shell-extension-dash-to-dock gnome-shell-extension-desktop-icons-ng gnome-shell-extension-vitals
+sudo pacman -S gnome-shell-extension-pano-git
 
 ## 拓展
 ⚠️ 警告：扩展在gnome桌面环境大版本更新的时候大概率会大面积失效，如果出现gnome桌面环境的更新，一定要先关闭所有扩展，谨慎行事
@@ -476,6 +478,36 @@ export QT_IM_MODULE=fcitx
 export GTK_IM_MODULE=fcitx
 ```
 
+### 卸载fcitx5
+```bash
+sudo pacman -Rns fcitx5-im fcitx5-chinese-addons fcitx5-mozc fcitx5-rime rime-ice-pinyin-git
+删除残留文件
+
+sudo rm -rfv ~/.config/fcitx5 ~/.local/fcitx5
+清理环境变量
+
+sudo vim /etc/environment
+```
+
+## ibus-rime
+参考：Rime - Arch Linux 中文维基 | 可选配置（基础篇） | archlinux 简明指南 | RIME · GitHub
+
+```bash
+sudo pacman -S ibus ibus-rime
+```
+- ibus是ibus输入法的基本包
+- ibus-rime是中州韵
+然后重启
+
+## 雾凇输入法
+```bash
+ln -s ~/Project-DL/rime ~/.config/ibus/
+```
+将下载好的配置连接到配置目录
+
+### extention
+Customize IBus
+
 # KVM
 ```bash
 sudo pacman -S  qemu-full virt-manager
@@ -596,4 +628,18 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6Jxi836pB6Fgw/wHlzPGCGxi002RGHUwaFc
 cd ~
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/tom/.profile
+```
+
+## 其他应用
+```bash
+sudo pacman -S q-dns
+```
+
+# 脚本与自定义
+
+## 剪贴板通过管道计算
+```bash
+pacman -Ss wl-clipboard
+
+
 ```
