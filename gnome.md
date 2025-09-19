@@ -1,3 +1,120 @@
+# 安装
+
+## 镜像系统设置
+```bash
+### 连接wifi
+iwctl
+station wlan0 connect <wifiname> 
+### 同步时间
+timedatectl set-ntp true 
+```
+
+## 分区
+```bash
+cfdisk
+mkfs.fat -F 32 /dev/nvme0n1p1
+### 格式化btrfs根分区
+mkfs.btrfs /dev/nvme0n1p2
+
+### btrfs设置
+mount -t btrfs -o compress=zstd /dev/nvme0n1p2 /mnt
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@swap
+btrfs subvolume list -p /mnt
+umount /mnt
+
+### 挂载
+mount -t btrfs -o subvol=/@,compress=zstd /dev/nvme0n1p2 /mnt #根目录
+mount --mkdir -t btrfs -o subvol=/@home,compress=zstd /dev/nvme0n1p2 /mnt/home #/home目录
+mount --mkdir -t btrfs -o subvol=/@swap,compress=zstd /dev/nvme0n1p2 /mnt/swap #/swap目录
+mount --mkdir /dev/nvme0n1p1 /mnt/boot/EFI    #EFI目录，/dev/nvme0n1p1替换为自己对应的efi分区名
+```
+
+## 安装
+```bash
+
+reflector -a 24 -c cn -f 10 --sort score --save /etc/pacman.d/mirrorlist --v
+
+# -a（age） 24 指定最近24小时更新过的源
+# -c（country） cn 指定国家为中国（可以增加邻国）
+# -f（fastest） 10 筛选出下载速度最快的10个
+# --sort score 按照下载速度和同步时间综合评分并排序，比单纯按照下载速度排序更可靠
+# --save /etc/pacman.d/mirrorlist 将结果保存到/etc/pacman.d/mirrorlist
+# --v（verbose） 过程可视化
+
+vim /etc/pacman.conf
+[archlinuxcn]
+Server = https://repo.archlinuxcn.org/$arch
+
+### 更新密钥
+pacman -Sy archlinux-keyring
+### 安装
+pacstrap -K /mnt base base-devel linux linux-firmware btrfs-progs
+pacstrap /mnt networkmanager vim sudo # amd-ucode intel-ucode
+
+# -K 复制密钥
+# base-devel是编译其他软件的时候用的
+# linux是内核，可以更换
+# linux-firmware是固件
+# btrfs-progs是btrfs文件系统的管理工具
+```
+
+## 交换空间
+```bash
+btrfs filesystem mkswapfile --size 4g --uuid clear /mnt/swap/swapfile
+swapon /mnt/swap/swapfile
+genfstab -U /mnt > /mnt/etc/fstab
+```
+
+## 进入系统
+
+```bash
+arch-chroot /mnt
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+hwclock --systohc #系统时钟写入主板硬件时钟
+
+### 本地化
+vim /etc/locale.gen
+#### 插入 
+en_US.UTF-8 UTF-8
+zh_CN.UTF-8 UTF-8
+
+
+locale-gen
+vim /etc/locale.conf
+#### 插入
+LANG=en_US.UTF-8
+
+passwd
+```
+
+### 引导
+
+```bash
+pacman -S grub efibootmgr os-prober
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=ARCH 
+--target指定架构
+--efi-directory指定目录
+--bootloader-id任意取一个启动项在bios里显示的名字
+
+vim /etc/default/grub
+```
+1. GRUB_DEFAULT=0改成saved，再取消GRUB_SAVEDEFAULT=true的注释。这一步是记住开机的选择。
+2. GRUB_CMDLINE_LINUX_DEFAULT里面去掉quiet以显示开机日志，loglevel设置日志等级为5。再添加nowatchdog modprobe.blacklist=sp5100_tco，禁用watchdog。intelcpu用户把sp5100_tco换成iTCO_wdt。
+  - loglevel共7级，5级是一个信息量的平衡点。watchdog的目的简单来说是在系统死机的时候自动重启系统。这在服务器或者嵌入式上有用，但是对个人用户来说没有意义，禁用以节省系统资源、提高开机和关机速度
+3. 手动写入或者取消最后一行GRUB_DISABLE_OS_PROBER=false的注释。这一步让grub使用os-prober生成其他系统的启动项
+
+### 生成配置文件
+```bash
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+> 重启
+
+---
+
+# 控制台
 ## 语言
 ```
 vim /etc/locale.gen
