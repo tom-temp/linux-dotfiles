@@ -174,11 +174,15 @@ pacman -S  flatpak gnome-software
 systemctl start gdm
 systemctl enable gdm
 
-pacman -S gvfs-smb menulibre 
+pacman -S gvfs-smb gvfs-goa gvfs-google gvfs-dnssd
+pacman -S menulibre 
 paru -S nautilus-hide
 # xdg-user-dirs-update
 ```
 - gvfs-smb 文件夹smba支持
+- gvfs-goa 文件夹支持与设置中账号的联动
+- gvfs-google 文件中支持google
+- gvfs-dnssd  文件中支持webdav
 - menulibre 想隐藏的图标
 
 
@@ -207,9 +211,9 @@ sudo systemctl enable --now bluetooth.service
 
 ## 桌面软件
 ```
-sudo pacman -S mission-center gnome-text-ditor gnome-disk-utility gnome-clocks gnome-calculator loupe snapshot showtime file-roller zen-browser zen-browser-i18n-zh-cn gst-plugin-pipewire gst-plugins-good amberol gnome-calendar evince
-paru -S microsoft-edge-stable-bin mpv
-paru -S 
+sudo pacman -S mission-center gnome-text-ditor gnome-disk-utility gnome-clocks gnome-calculator loupe snapshot showtime file-roller zen-browser zen-browser-i18n-zh-cn gst-plugin-pipewire gst-plugins-good amberol gnome-calendar gnome-screenshot mpv sushi
+sudo pacman -S tesseract-data-chi_sim tesseract-data-chi_tra tesseract-data-eng pot-translation
+paru -S microsoft-edge-stable-bin 
 paru -S appimagelauncher
 ```
 
@@ -224,9 +228,11 @@ paru -S appimagelauncher
 - file-roller解压
 - gst-plugin-pipewire gst-plugins-good gnome截图工具自带的录屏，需登出
 - amberol 音乐播放器
-- evince 通用文件查看，文件中空格查看
 - zen-browser zen-browser-i18n-cn 基于firefox的浏览器和cn语言包
   - zen浏览器一定要在设置>zen模组里面安装transparent zen模组，可以获得特别流畅的动画效果
+- gnome-screenshot  可以命令行中进行截图的操作
+- sushi 快速浏览
+- tesseract-data-chi_sim tesseract-data-chi_tra tesseract-data-eng pot-translation 翻译与OCR，不能直接截图，需要与gnome-screenshot搭配
 
 ### 未安装
 - baobab磁盘使用情况分析工具，
@@ -239,6 +245,8 @@ paru -S appimagelauncher
 - wps-office-mui-zh-cn 是wps的中文语言包
 - typora-free 是markdown编辑器
 - albert 是一个启动器，类似plasma的kruner。在桌面弹出一个置顶的搜索框，有一系列功能
+- imv 简易的图片播放器，不好用
+
 ## sublime
 > https://blog.csdn.net/yelon_/article/details/130831525
 
