@@ -29,6 +29,7 @@ mount -t btrfs -o subvol=/@,compress=zstd /dev/nvme0n1p2 /mnt #根目录
 mount --mkdir -t btrfs -o subvol=/@home,compress=zstd /dev/nvme0n1p2 /mnt/home #/home目录
 mount --mkdir -t btrfs -o subvol=/@swap,compress=zstd /dev/nvme0n1p2 /mnt/swap #/swap目录
 mount --mkdir /dev/nvme0n1p1 /mnt/boot/EFI    #EFI目录，/dev/nvme0n1p1替换为自己对应的efi分区名
+sudo btrfs filesystem label /mnt Arch
 ```
 
 ## 安装
@@ -50,7 +51,7 @@ Server = https://repo.archlinuxcn.org/$arch
 ### 更新密钥
 pacman -Sy archlinux-keyring
 ### 安装
-pacstrap -K /mnt base base-devel linux linux-firmware btrfs-progs
+pacstrap -K /mnt base base-devel linux-zen linux-firmware btrfs-progs
 pacstrap /mnt networkmanager vim sudo # amd-ucode intel-ucode
 
 # -K 复制密钥
@@ -73,6 +74,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc #系统时钟写入主板硬件时钟
+vim /etc/hostname
 
 ### 本地化
 vim /etc/locale.gen
@@ -89,7 +91,7 @@ LANG=en_US.UTF-8
 passwd
 ```
 
-### 引导
+### grub引导
 
 ```bash
 pacman -S grub efibootmgr os-prober
@@ -105,16 +107,56 @@ vim /etc/default/grub
   - loglevel共7级，5级是一个信息量的平衡点。watchdog的目的简单来说是在系统死机的时候自动重启系统。这在服务器或者嵌入式上有用，但是对个人用户来说没有意义，禁用以节省系统资源、提高开机和关机速度
 3. 手动写入或者取消最后一行GRUB_DISABLE_OS_PROBER=false的注释。这一步让grub使用os-prober生成其他系统的启动项
 
-### 生成配置文件
+#### 生成配置文件
 ```bash
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+### refind引导
+
+```bash
+pacman -S refind efibootmgr
+refind-install --alldrivers --usedefault /dev/sdXY # 将 rEFInd 的文件复制到 esp/EFI/BOOT/ efi默认的启动项目
+```
+> 默认情况下 refind-install 只会为内核所在的文件系统安装驱动。 其他的文件系统需要手动安装，通过将 /usr/share/refind/drivers_x64/ 复制到 esp/EFI/refind/drivers_x64/, 或者你可以以 --alldrivers 选项安装。 这对于可启动的 USB 驱动器有帮助。
+> 将 rEFInd 的文件安装到 ESP 后，验证 rEFInd 是否在与内核相同的目录中创建了包含内核参数的 refind_linux.conf。如果您使用 --usedefault 选项，则不会创建此配置文件，以 root 身份运行 mkrlconf 来创建它。
+
+#### 配置可以查找的内核
+
+1. 因为 Arch Linux 的内核文件名通常会带有特定的后缀，比如：vmlinuz-linux-zen，所以需要修改 extra_kernel_version_strings
+```bash
+vim /boot/EFI/efi/Boot/refind.conf
+
+# 取消下面这行的注释
+extra_kernel_version_strings linux-hardened,linux-zen,linux-lts,linux
+```
+
+2. 编辑/boot/refind_linux.conf
+```bash
+mkrlconf # 生成默认的配置文件
+# 如果可以引导进入安装好的系统可以用，镜像系统中会变为镜像系统启动
+
+lsblk -o NAME,PARTUUID,UUID # 查看PARTUUID
+
+"Boot using default options"     "root=PARTUUID=50ad4c6c-b054-4df3-9bc1-3d840e4195c1 rootflags=subvol=@ rw add_efi_memmap initrd=boot\intel-ucode.img initrd=boot\initramfs-linux-zen.img nowatchdog modprobe.blacklist=iTCO_wdt"
+"Boot using fallback initramfs"  "root=PARTUUID=50ad4c6c-b054-4df3-9bc1-3d840e4195c1 rootflags=subvol=@ rw add_efi_memmap initrd=boot\initramfs-linux-zen-fallback.img"
+"Boot to terminal"               "root=PARTUUID=50ad4c6c-b054-4df3-9bc1-3d840e4195c1 rootflags=subvol=@ rw add_efi_memmap systemd.unit=multi-user.target"
+```
+
+
 
 > 重启
 
 ---
 
 # 控制台
+
+## 启动网络
+```bash
+systemctl enable --now NetworkManager 
+nmtui
+```
+
 ## 语言
 ```
 vim /etc/locale.gen
@@ -128,7 +170,13 @@ vim /etc/locale.conf
 ```
 重启
 
-
+## 用户
+```bash
+useradd -m -g wheel <username> 
+passwd <username>
+vim /etc/sudoers
+%wheel ALL=（ALL：ALL） ALL
+```
 
 ## 安装字体与显卡驱动
 ```sh
@@ -139,7 +187,14 @@ sudo pacman -S libvdpau-va-gl  #将ffmpeg对nvidia的以来转移到intel gpu上
 sudo pacman -S intel-gpu-tools # gputop 查看gpu使用
 # sudo pacman -S xf86-video-intel intel-media-driver
 
-# 虚拟机下安装驱动
+## 虚拟机下安装驱动Virtio
+sudo pacman -S qemu-guest-agent xf86-video-qxl spice-vdagent mesa vulkan-intel vulkan-virtio vulkan-tools virglrenderer
+sudo systemctl status qemu-guest-agent spice-vdagentd 
+sudo systemctl enable --now qemu-guest-agent
+sudo systemctl enable --now spice-vdagentd
+
+
+## 虚拟机下安装驱动VMware
 sudo pacman -S  open-vm-tools xf86-input-vmmouse mesa vulkan-mesa-layers lib32-vulkan-mesa-layers vulkan-tools xf86-video-vesa
 systemctl enable sshd vmtoolsd vmware-vmblock-fuse
 # lib32-vulkan-virtio pacman -S 
@@ -161,9 +216,7 @@ Server = https://repo.archlinuxcn.org/$arch
 pacman -Sy
 pacman -S archlinuxcn-keyring 
 pacman -S paru 
-pacman -S ttf-maplemono
-pacman -S ttf-maplemono-nf-unhinted
-pacman -S ttf-maplemono-nf-cn-unhinted
+pacman -S ttf-maplemono ttf-maplemono-nf-unhinted ttf-maplemono-nf-cn-unhinted
 ```
 
 
@@ -298,8 +351,8 @@ sudo pacman -S dconf-editor
 nautilus -q 
 ```
 
-
-# 视频播放器开启硬件编解码
+# 系统硬件设置
+## 视频播放器开启硬件编解码
 1. 方法一：配置文件
 
 编辑mpv配置文件（记得打开一次mpv生成目录）
@@ -320,7 +373,7 @@ celluloid首选项的配置文件页面，激活“加载mpv配置文件”，�
 hwdec=yes
 
 
-# 快照 snapper
+## 快照 snapper
 ```bash
 sudo pacman -S snapper btrfs-assistant
 sudo btrfs subvolume create /.snapshots # 只在@子卷（root）创建镜像
@@ -329,8 +382,9 @@ sudo btrfs subvolume create /.snapshots # 只在@子卷（root）创建镜像
 - snapper 是创建快照的主要程序
 - btrfs-assistant 是图形化管理btrfs和快照的软件
 - snap-pac 是利用钩子在进行一些pacman命令的时候自动创建快照
-# 自动生成快照启动项
+
 ```bash
+# 自动生成快照启动项
 sudo pacman -S grub-btrfs inotify-tools
 reboot
 sudo systemctl enable --now grub-btrfsd
@@ -432,6 +486,26 @@ super+shift+S   flatpak run be.alexandervanhee.gradia --screenshot=INTERACTIVE
 
 # 输入法
 
+## ibus-rime
+参考：Rime - Arch Linux 中文维基 | 可选配置（基础篇） | archlinux 简明指南 | RIME · GitHub
+
+```bash
+sudo pacman -S ibus ibus-rime
+```
+- ibus是ibus输入法的基本包
+- ibus-rime是中州韵
+然后重启
+
+### 雾凇输入法
+```bash
+git clone https://github.com/iDvel/rime-ice.git ~/Project-DL/rime
+ln -s ~/Project-DL/rime ~/.config/ibus/
+```
+将下载好的配置连接到配置目录
+
+### extention
+Customize IBus
+
 ## fcitx5
 ```
 sudo pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-rime rime-ice-pinyin-git # fcitx5-mozc 
@@ -489,31 +563,16 @@ sudo rm -rfv ~/.config/fcitx5 ~/.local/fcitx5
 sudo vim /etc/environment
 ```
 
-## ibus-rime
-参考：Rime - Arch Linux 中文维基 | 可选配置（基础篇） | archlinux 简明指南 | RIME · GitHub
-
-```bash
-sudo pacman -S ibus ibus-rime
-```
-- ibus是ibus输入法的基本包
-- ibus-rime是中州韵
-然后重启
-
-## 雾凇输入法
-```bash
-ln -s ~/Project-DL/rime ~/.config/ibus/
-```
-将下载好的配置连接到配置目录
-
-### extention
-Customize IBus
-
 # KVM
+
 ```bash
-sudo pacman -S  qemu-full virt-manager
+# sudo pacman -S qemu-full qemu-emulators-full virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat libvirt
+sudo pacman -S  qemu-full virt-manager virglrenderer
 sudo systemctl enable --now libvirtd
 sudo virsh net-start default #开启nat网络
 sudo virsh net-autostart default #自动启动nat网络
+virsh net-edit default
+
 sudo usermod -a -G libvirt $(whoami)
 sudo vim /etc/libvirt/qemu.conf
 ```
@@ -572,6 +631,13 @@ sudo vim /etc/libvirt/qemu.conf
 nvram = [
 	"/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"
 ]
+
+sudo systemctl restart libvirtd
+```
+
+5. 虚拟机内检查
+```bash
+dmesg | grep drm
 ```
 
 # shell
