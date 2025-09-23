@@ -1,0 +1,13 @@
+[config]
+allow_images=true
+width=550
+show=drun
+prompt=Application
+height=750
+term=ghostty
+hide_scroll=true
+print_command=true
+insensitive=true
+columns=1
+no_actions=true
+

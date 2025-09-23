@@ -1,3 +1,16 @@
+# package
+## xbps
+if [ "$(command -v xbps-install)" ]; then
+  alias xbps-install='sudo xbps-install -S && sudo xbps-install'
+fi
+
+## brew
+if [ -e "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+
+# PATH
 export MAIN_DIR=/opt
 export WAPP_DIR="$MAIN_DIR/app-webgo"
 
@@ -6,6 +19,17 @@ SAPP_DIR=${MAIN_DIR}/app-shell
 # 环境变量
 export SAPP_DIR=${SAPP_DIR}
 export PATH=$PATH:${SAPP_DIR}/bin:$HOME/.local/bin
+
+if [ "$(command -v fnm)" ]; then
+    eval "$(fnm env --use-on-cd)"
+fi
+if [ "$(command -v pnpm)" ]; then
+    export PNPM_HOME="/home/tom/.local/pnpm"
+    case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
+fi
 
 export COLOR_H1_0='\e[1;35;42m'
 export COLOR_H1_1='\e[4;30;46m'
@@ -18,16 +42,7 @@ export GITUL=http://github.opsp.eu.org/
 # default programe
 export EDITOR='/usr/bin/vim'
 
-# package
-## xbps
-if [ "$(command -v xbps-install)" ]; then
-  alias xbps-install='sudo xbps-install -S && sudo xbps-install'
-fi
 
-## brew
-if [ -e "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
 
 # theme =======================================================================================================================
 # starship

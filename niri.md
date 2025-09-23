@@ -1,247 +1,65 @@
-# 安装
-
-## 镜像系统设置
-```bash
-### 连接wifi
-iwctl
-station wlan0 connect <wifiname> 
-### 同步时间
-timedatectl set-ntp true 
-```
-
-## 分区
-```bash
-cfdisk
-mkfs.fat -F 32 /dev/nvme0n1p1
-### 格式化btrfs根分区
-mkfs.btrfs /dev/nvme0n1p2
-
-### btrfs设置
-mount -t btrfs -o compress=zstd /dev/nvme0n1p2 /mnt
-btrfs subvolume create /mnt/@
-btrfs subvolume create /mnt/@home
-btrfs subvolume create /mnt/@swap
-btrfs subvolume list -p /mnt
-umount /mnt
-
-### 挂载
-mount -t btrfs -o subvol=/@,compress=zstd /dev/nvme0n1p2 /mnt #根目录
-mount --mkdir -t btrfs -o subvol=/@home,compress=zstd /dev/nvme0n1p2 /mnt/home #/home目录
-mount --mkdir -t btrfs -o subvol=/@swap,compress=zstd /dev/nvme0n1p2 /mnt/swap #/swap目录
-mount --mkdir /dev/nvme0n1p1 /mnt/boot/EFI    #EFI目录，/dev/nvme0n1p1替换为自己对应的efi分区名
-sudo btrfs filesystem label /mnt Arch
-```
-
-## 安装
-```bash
-
-reflector -a 24 -c cn -f 10 --sort score --save /etc/pacman.d/mirrorlist --v
-
-# -a（age） 24 指定最近24小时更新过的源
-# -c（country） cn 指定国家为中国（可以增加邻国）
-# -f（fastest） 10 筛选出下载速度最快的10个
-# --sort score 按照下载速度和同步时间综合评分并排序，比单纯按照下载速度排序更可靠
-# --save /etc/pacman.d/mirrorlist 将结果保存到/etc/pacman.d/mirrorlist
-# --v（verbose） 过程可视化
-
-vim /etc/pacman.conf
-[archlinuxcn]
-Server = https://repo.archlinuxcn.org/$arch
-
-### 更新密钥
-pacman -Sy archlinux-keyring
-### 安装
-pacstrap -K /mnt base base-devel linux-zen linux-firmware btrfs-progs
-pacstrap /mnt networkmanager vim sudo # amd-ucode intel-ucode
-
-# -K 复制密钥
-# base-devel是编译其他软件的时候用的
-# linux是内核，可以更换
-# linux-firmware是固件
-# btrfs-progs是btrfs文件系统的管理工具
-```
-
-## 交换空间
-```bash
-btrfs filesystem mkswapfile --size 4g --uuid clear /mnt/swap/swapfile
-swapon /mnt/swap/swapfile
-genfstab -U /mnt > /mnt/etc/fstab
-```
-
-## 进入系统
-
-```bash
-arch-chroot /mnt
-ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-hwclock --systohc #系统时钟写入主板硬件时钟
-vim /etc/hostname
-
-### 本地化
-vim /etc/locale.gen
-#### 插入 
-en_US.UTF-8 UTF-8
-zh_CN.UTF-8 UTF-8
-
-
-locale-gen
-vim /etc/locale.conf
-#### 插入
-LANG=en_US.UTF-8
-
-passwd
-```
-
-### grub引导
-
-```bash
-pacman -S grub efibootmgr os-prober
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=ARCH 
---target指定架构
---efi-directory指定目录
---bootloader-id任意取一个启动项在bios里显示的名字
-
-vim /etc/default/grub
-```
-1. GRUB_DEFAULT=0改成saved，再取消GRUB_SAVEDEFAULT=true的注释。这一步是记住开机的选择。
-2. GRUB_CMDLINE_LINUX_DEFAULT里面去掉quiet以显示开机日志，loglevel设置日志等级为5。再添加nowatchdog modprobe.blacklist=sp5100_tco，禁用watchdog。intelcpu用户把sp5100_tco换成iTCO_wdt。
-  - loglevel共7级，5级是一个信息量的平衡点。watchdog的目的简单来说是在系统死机的时候自动重启系统。这在服务器或者嵌入式上有用，但是对个人用户来说没有意义，禁用以节省系统资源、提高开机和关机速度
-3. 手动写入或者取消最后一行GRUB_DISABLE_OS_PROBER=false的注释。这一步让grub使用os-prober生成其他系统的启动项
-
-#### 生成配置文件
-```bash
-grub-mkconfig -o /boot/grub/grub.cfg
-```
-
-### refind引导
-
-```bash
-pacman -S refind efibootmgr
-refind-install --alldrivers --usedefault /dev/sdXY # 将 rEFInd 的文件复制到 esp/EFI/BOOT/ efi默认的启动项目
-```
-> 默认情况下 refind-install 只会为内核所在的文件系统安装驱动。 其他的文件系统需要手动安装，通过将 /usr/share/refind/drivers_x64/ 复制到 esp/EFI/refind/drivers_x64/, 或者你可以以 --alldrivers 选项安装。 这对于可启动的 USB 驱动器有帮助。
-> 将 rEFInd 的文件安装到 ESP 后，验证 rEFInd 是否在与内核相同的目录中创建了包含内核参数的 refind_linux.conf。如果您使用 --usedefault 选项，则不会创建此配置文件，以 root 身份运行 mkrlconf 来创建它。
-
-#### 配置可以查找的内核
-
-1. 因为 Arch Linux 的内核文件名通常会带有特定的后缀，比如：vmlinuz-linux-zen，所以需要修改 extra_kernel_version_strings
-```bash
-vim /boot/EFI/efi/Boot/refind.conf
-
-# 取消下面这行的注释
-extra_kernel_version_strings linux-hardened,linux-zen,linux-lts,linux
-```
-
-2. 编辑/boot/refind_linux.conf
-```bash
-mkrlconf # 生成默认的配置文件
-# 如果可以引导进入安装好的系统可以用，镜像系统中会变为镜像系统启动
-
-lsblk -o NAME,PARTUUID,UUID # 查看PARTUUID
-
-"Boot using default options"     "root=PARTUUID=50ad4c6c-b054-4df3-9bc1-3d840e4195c1 rootflags=subvol=@ rw add_efi_memmap initrd=boot\intel-ucode.img initrd=boot\initramfs-linux-zen.img nowatchdog modprobe.blacklist=iTCO_wdt"
-"Boot using fallback initramfs"  "root=PARTUUID=50ad4c6c-b054-4df3-9bc1-3d840e4195c1 rootflags=subvol=@ rw add_efi_memmap initrd=boot\initramfs-linux-zen-fallback.img"
-"Boot to terminal"               "root=PARTUUID=50ad4c6c-b054-4df3-9bc1-3d840e4195c1 rootflags=subvol=@ rw add_efi_memmap systemd.unit=multi-user.target"
-```
-
-
-
-> 重启
-
----
-
-# 控制台
-
-## 启动网络
-```bash
-systemctl enable --now NetworkManager 
-nmtui
-```
-
-## 语言
-```
-vim /etc/locale.gen
-
-#取消en_US.UTF-8 UTF-8和zh_CN.UTF-8的注释
-
-locale-gen
-
-vim /etc/locale.conf
-写入 LANG=en_US.UTF-8
-```
-重启
-
-## 用户
-```bash
-useradd -m -g wheel <username> 
-passwd <username>
-vim /etc/sudoers
-%wheel ALL=（ALL：ALL） ALL
-```
-
-## 安装字体与显卡驱动
-```sh
-sudo pacman -S wqy-zenhei  noto-fonts-emoji ttf-hack-nerd ttf-liberation openssh vim linux-headers # noto-fonts
-sudo pacman -S mesa mesa-utils vulkan-mesa-layers
-sudo pacman -S vulkan-intel lib32-vulkan-intel vulkan-tools 
-sudo pacman -S libvdpau-va-gl  #将ffmpeg对nvidia的以来转移到intel gpu上
-sudo pacman -S intel-gpu-tools # gputop 查看gpu使用
-# sudo pacman -S xf86-video-intel intel-media-driver
-
-## 虚拟机下安装驱动Virtio
-sudo pacman -S qemu-guest-agent xf86-video-qxl spice-vdagent mesa vulkan-intel vulkan-virtio vulkan-tools virglrenderer
-sudo systemctl status qemu-guest-agent spice-vdagentd 
-sudo systemctl enable --now qemu-guest-agent
-sudo systemctl enable --now spice-vdagentd
-
-
-## 虚拟机下安装驱动VMware
-sudo pacman -S  open-vm-tools xf86-input-vmmouse mesa vulkan-mesa-layers lib32-vulkan-mesa-layers vulkan-tools xf86-video-vesa
-systemctl enable sshd vmtoolsd vmware-vmblock-fuse
-# lib32-vulkan-virtio pacman -S 
-
-# 查看vulkan与opengl输出
-vulkaninfo
-eglinfo -B
-glxinfo | grep "OpenGL renderer"
-```
-
-## 编辑sudo权限
-```sh
-EDITOR=vim visudo
-
-vim /etc/pacman.conf
-[archlinuxcn]
-Server = https://repo.archlinuxcn.org/$arch
-
-pacman -Sy
-pacman -S archlinuxcn-keyring 
-pacman -S paru 
-pacman -S ttf-maplemono ttf-maplemono-nf-unhinted ttf-maplemono-nf-cn-unhinted
-```
-
-
 # 桌面环境
-```sh
-pacman -S gnome-desktop gdm  gnome-control-center ghostty #  foot
-pacman -S  flatpak gnome-software
-systemctl start gdm
-systemctl enable gdm
-
-pacman -S gvfs-smb gvfs-goa gvfs-google gvfs-dnssd
-pacman -S menulibre 
-paru -S nautilus-hide
-# xdg-user-dirs-update
+```bash
+sudo pacman -S wayland pipewire-jack xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring mako fuzzel xwayland-satellite sddm niri mate-polkit # wev
+paru -S sddm-theme-greenleaf sddm-old-breeze-theme
+# sudo pacman -S  konsole dolphin 
 ```
-- gvfs-smb 文件夹smba支持
-- gvfs-goa 文件夹支持与设置中账号的联动
-- gvfs-google 文件中支持google
-- gvfs-dnssd  文件中支持webdav
-- menulibre 想隐藏的图标
+
+## sddm
+```bash
+sudo mkdir /etc/sddm.conf.d 
+sudo sh -c "echo '[Theme]' > /etc/sddm.conf.d/theme.conf"
+sudo sh -c "echo 'Current=greenleaf' >> /etc/sddm.conf.d/theme.conf"
+sudo cp Pictures/test.png /usr/share/sddm/themes/greenleaf/background.png
+```
+
+- xdg-desktop-portal-gtk 推荐的portals
+- xdg-desktop-portal-gnome 推荐的portals
+- gnome-keyring 推荐的portals
+- mako 通知服务
+- xwayland-satellite：X11应用
+- fuzzel 应用管理
+- wev 捕获按键，并输出为niri配置里的快捷键样式
+- mate-polkit 权限管理
+
+## 桌面
+
+```bash
+paru -S noctalia-shell
+
+mkdir -p ~/.config/systemd/user/
+vim ~/.config/systemd/user/noctalia.service
+
+[Unit]
+Description=Noctalia Shell Service
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=qs -c noctalia-shell
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=graphical-session.target
+
+systemctl --user add-wants niri.service noctalia.service
+
+# swayidle swaylock swaybg
+```
+
+
+
+```bash
+pacman -S  flatpak gnome-software ghostty
+pacman -S gvfs-smb gvfs-goa gvfs-google gvfs-dnssd
+```
+
 
 
 ## 安装声音与网络配置固件 与 服务
 
-```
+```bash
 sudo pacman -S sof-firmware alsa-firmware alsa-ucm-conf
 sudo pacman -S pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber
 
@@ -266,7 +84,7 @@ sudo systemctl enable --now bluetooth.service
 ```
 sudo pacman -S mission-center gnome-text-ditor gnome-disk-utility gnome-clocks gnome-calculator loupe snapshot showtime file-roller zen-browser zen-browser-i18n-zh-cn gst-plugin-pipewire gst-plugins-good amberol gnome-calendar gnome-screenshot mpv sushi
 sudo pacman -S tesseract-data-chi_sim tesseract-data-chi_tra tesseract-data-eng pot-translation
-paru -S microsoft-edge-stable-bin 
+paru -S microsoft-edge-stable-bin vscodium-bin
 paru -S appimagelauncher
 ```
 
@@ -351,8 +169,8 @@ sudo pacman -S dconf-editor
 nautilus -q 
 ```
 
-# 系统硬件设置
-## 视频播放器开启硬件编解码
+
+# 视频播放器开启硬件编解码
 1. 方法一：配置文件
 
 编辑mpv配置文件（记得打开一次mpv生成目录）
@@ -373,7 +191,7 @@ celluloid首选项的配置文件页面，激活“加载mpv配置文件”，�
 hwdec=yes
 
 
-## 快照 snapper
+# 快照 snapper
 ```bash
 sudo pacman -S snapper btrfs-assistant
 sudo btrfs subvolume create /.snapshots # 只在@子卷（root）创建镜像
@@ -382,9 +200,8 @@ sudo btrfs subvolume create /.snapshots # 只在@子卷（root）创建镜像
 - snapper 是创建快照的主要程序
 - btrfs-assistant 是图形化管理btrfs和快照的软件
 - snap-pac 是利用钩子在进行一些pacman命令的时候自动创建快照
-
-```bash
 # 自动生成快照启动项
+```bash
 sudo pacman -S grub-btrfs inotify-tools
 reboot
 sudo systemctl enable --now grub-btrfsd
@@ -395,7 +212,7 @@ sudo systemctl enable --now grub-btrfsd
 3. 然后到snapper页面下的New/Delete页面就可以新建和管理快照了，Browse/Restore页面选中快照后点restore可以恢复到那个快照的状态。
 4. 如果你要同时快照root和home的话就分别创建一个root快照和home快照，恢复的时候各自恢复就行了。
 
-## 睡眠到硬盘
+# 睡眠到硬盘
 硬盘上必须有交换空间才能睡眠到硬盘
 
 1. 添加hook
@@ -412,7 +229,7 @@ reboot
 systemctl hibernate
 ```
 
-## 性能模式切换工具 power-profiles-daemon
+# 性能模式切换工具 power-profiles-daemon
 性能模式切换，有三个档位，performance性能、balance平衡、powersave节电。一般平衡档位就够用了，也不需要调节风扇什么的。
 
 ```bash
@@ -421,7 +238,7 @@ sudo systemctl enable --now power-profiles-daemon
 ```
 不建议使用tlp或者auto-cpufreq，意义不大，这个易用而且足够。如果想折腾的话可以看附录TLP相关。tlp和auto-cpufreq都有对应的gnome扩展，但未经验证，不保证能用。
 
-### 实用插件扩展
+## 实用插件扩展
 power tracker 显示电池充放电 auto power profile 配合powerProfilesDaemon使用，可以自动切换模式 power profile indicator 配合powerProfilesDaemon使用，面板显示当前模式
 
 
@@ -515,26 +332,6 @@ super+shift+S   flatpak run be.alexandervanhee.gradia --screenshot=INTERACTIVE
 
 # 输入法
 
-## ibus-rime
-参考：Rime - Arch Linux 中文维基 | 可选配置（基础篇） | archlinux 简明指南 | RIME · GitHub
-
-```bash
-sudo pacman -S ibus ibus-rime
-```
-- ibus是ibus输入法的基本包
-- ibus-rime是中州韵
-然后重启
-
-### 雾凇输入法
-```bash
-git clone https://github.com/iDvel/rime-ice.git ~/Project-DL/rime
-ln -s ~/Project-DL/rime ~/.config/ibus/
-```
-将下载好的配置连接到配置目录
-
-### extention
-Customize IBus
-
 ## fcitx5
 ```
 sudo pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-rime rime-ice-pinyin-git # fcitx5-mozc 
@@ -592,16 +389,31 @@ sudo rm -rfv ~/.config/fcitx5 ~/.local/fcitx5
 sudo vim /etc/environment
 ```
 
-# KVM
+## ibus-rime
+参考：Rime - Arch Linux 中文维基 | 可选配置（基础篇） | archlinux 简明指南 | RIME · GitHub
 
 ```bash
-# sudo pacman -S qemu-full qemu-emulators-full virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat libvirt
-sudo pacman -S  qemu-full virt-manager virglrenderer
+sudo pacman -S ibus ibus-rime
+```
+- ibus是ibus输入法的基本包
+- ibus-rime是中州韵
+然后重启
+
+## 雾凇输入法
+```bash
+ln -s ~/Project-DL/rime ~/.config/ibus/
+```
+将下载好的配置连接到配置目录
+
+### extention
+Customize IBus
+
+# KVM
+```bash
+sudo pacman -S  qemu-full virt-manager
 sudo systemctl enable --now libvirtd
 sudo virsh net-start default #开启nat网络
 sudo virsh net-autostart default #自动启动nat网络
-virsh net-edit default
-
 sudo usermod -a -G libvirt $(whoami)
 sudo vim /etc/libvirt/qemu.conf
 ```
@@ -660,27 +472,20 @@ sudo vim /etc/libvirt/qemu.conf
 nvram = [
 	"/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"
 ]
-
-sudo systemctl restart libvirtd
-```
-
-5. 虚拟机内检查
-```bash
-dmesg | grep drm
 ```
 
 # shell
 ```sh
-sudo pacman -S pacman-contrib havn bluetui stew fnt
+sudo pacman -S pacman-contrib havn bluetui stow # fnt
 ```
 - pacman-contrib 是pacman的一些小工具 pactree, pacsearch checkupdates
 - havn    #端口扫描
 - bluetui #蓝牙管理
-- stew    #github二进制安装
+- stow    #github二进制安装
 - fnt     #适用于字体的字体管理器
 
 ```sh
-sudo pacman -S oh-my-posh curl wget ripgrep fd zsh atuin stow # git
+sudo pacman -S oh-my-posh curl wget ripgrep fd zsh atuin # git
 sudo pacman -S exa zoxide procs dust glow hexyl
 sudo pacman -S bottom tmux fastfetch
  
@@ -736,19 +541,5 @@ sudo pacman -S q-dns
 ```bash
 pacman -Ss wl-clipboard
 
-
-```
-
-
-## launcher-albert
-```bash
-pacman -S albert qt6-wayland qt5-wayland
-
-
-```
-
-## 翻墙
-```bash
-paru -S flclash-bin
 
 ```

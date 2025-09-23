@@ -1,0 +1,47 @@
+* {
+	font-family: "Maple Mono NF CN Medium";
+}
+
+window {
+	background-color: #212330;
+}
+
+#input {
+	margin: 1px;
+	border-radius: 3px;
+	border: none;
+	/* background-color: #3B4252; */
+	color: rgb(0, 0, 0) !important;
+}
+
+#inner-box {
+	/* background-color: #383C4A; */
+}
+
+#outer-box {
+	margin: 2px;
+	padding: 2px;
+	/* background-color: #383C4A; */
+}
+
+#scroll {
+	margin: 5px;
+}
+
+#text {
+	padding: 4px;
+	color: rgb(255, 255, 255);
+}
+
+#entry:nth-child(even){
+	background-color: #404552;
+}
+
+#entry:selected {
+	background-color: #4C566A;
+}
+
+#text:selected {
+	background: transparent;
+}
+

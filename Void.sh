@@ -129,3 +129,4 @@ pipx install rich-cli
 
 
 
+pnpm install opcua-commander -g 
