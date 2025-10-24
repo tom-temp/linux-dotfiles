@@ -5,7 +5,7 @@ cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
 sed -i 's|https://repo-default.voidlinux.org|https://mirrors.tuna.tsinghua.edu.cn/voidlinux|g' /etc/xbps.d/*-repository-*.conf
 xbps-install -S
 xbps-remove -R grub-i386-efi grub-x86_64-efi grub efibootmgr libefivar lvm2 os-prober thin-provisioning-tools
-
+xbps-remove -R iptables openssh
 # voidlinux
 xbps-install fuse curl wget vim exa zoxide procs dust glow vsv unzip openssh openssl hexyl gitui
 xbps-install bottom tmux fastfetch bash-preexec

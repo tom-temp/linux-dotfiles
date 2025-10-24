@@ -35,7 +35,7 @@ sudo btrfs filesystem label /mnt Arch
 ## 安装
 ```bash
 
-reflector -a 24 -c cn -f 10 --sort score --save /etc/pacman.d/mirrorlist --v
+reflector -a 24 -c ca -f 10 --sort score --save /etc/pacman.d/mirrorlist --v
 
 # -a（age） 24 指定最近24小时更新过的源
 # -c（country） cn 指定国家为中国（可以增加邻国）
@@ -71,7 +71,13 @@ genfstab -U /mnt > /mnt/etc/fstab
 ## 进入系统
 
 ```bash
+cp /etc/pacman.conf  /mnt/etc/pacman.conf 
 arch-chroot /mnt
+
+vim /etc/pacman.conf
+[archlinuxcn]
+Server = https://repo.archlinuxcn.org/$arch
+
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc #系统时钟写入主板硬件时钟
 vim /etc/hostname
@@ -95,7 +101,7 @@ passwd
 
 ```bash
 pacman -S grub efibootmgr os-prober
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=ARCH 
+grub-install --target=x86_64-efi --efi-directory=/boot/EFI --bootloader-id=ARCH 
 --target指定架构
 --efi-directory指定目录
 --bootloader-id任意取一个启动项在bios里显示的名字
@@ -157,19 +163,6 @@ systemctl enable --now NetworkManager
 nmtui
 ```
 
-## 语言
-```
-vim /etc/locale.gen
-
-#取消en_US.UTF-8 UTF-8和zh_CN.UTF-8的注释
-
-locale-gen
-
-vim /etc/locale.conf
-写入 LANG=en_US.UTF-8
-```
-重启
-
 ## 用户
 ```bash
 useradd -m -g wheel <username> 
@@ -207,12 +200,6 @@ glxinfo | grep "OpenGL renderer"
 
 ## 编辑sudo权限
 ```sh
-EDITOR=vim visudo
-
-vim /etc/pacman.conf
-[archlinuxcn]
-Server = https://repo.archlinuxcn.org/$arch
-
 pacman -Sy
 pacman -S archlinuxcn-keyring 
 pacman -S paru 
@@ -671,7 +658,7 @@ dmesg | grep drm
 
 # shell
 ```sh
-sudo pacman -S pacman-contrib havn bluetui stew fnt
+sudo pacman -S pacman-contrib havn bluetui # stew fnt
 ```
 - pacman-contrib 是pacman的一些小工具 pactree, pacsearch checkupdates
 - havn    #端口扫描

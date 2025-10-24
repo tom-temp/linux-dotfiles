@@ -66,19 +66,18 @@ newline = true
         cache_duration = "none"
 
     [[blocks.segments]]
-    template = '{{ if not (contains "/home" .Env.PWD)}}  {{ end }} {{if not .Writable}}<#CB4B16>{{.Path}}</>{{ else }}{{.Path}}{{end}} '
+    template = '{{ if not (contains "/home" .Env.PWD)}}  {{ end }} {{.Path}} '
     foreground = "p:white"
     background = "#0CA0D8"
-    # background_templates = ["{{if not .Writable}} #CB4B16 {{end}}, {{if .Writable}} #0CA0D8 {{end}}"]
+    # background_templates = ["{{if .Writable}}#0CA0D8{{else}}#CB4B16{{end}}"]
     type = "path"
-    style = "plain"
+    style = "powerline"
 
         [blocks.segments.properties]
         cache_duration = "none"
         folder_icon = " "
         folder_separator_template = "<#93d0ff> » </>"
         home_icon = " "
-        style = "full"
 
     [[blocks.segments]]
     template = " {{ if not .Error }}{{ .Icon }}{{ .Percentage  }}%{{ end }} "
