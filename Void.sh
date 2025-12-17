@@ -7,7 +7,7 @@ xbps-install -S
 xbps-remove -R grub-i386-efi grub-x86_64-efi grub efibootmgr libefivar lvm2 os-prober thin-provisioning-tools
 xbps-remove -R iptables openssh
 # voidlinux
-xbps-install fuse curl wget vim exa zoxide procs dust glow vsv unzip openssh openssl hexyl gitui
+xbps-install fuse curl wget vim exa zoxide procs dust glow vsv unzip openssh openssl hexyl gitui helix
 xbps-install bottom tmux fastfetch bash-preexec
 
 # service
@@ -65,7 +65,7 @@ stow vim
 # zsh
 mkdir -p ~/.config/zsh
 git clone --depth=1 https://github.com/zdharma-continuum/zinit.git ~/.config/zsh/zinit
-stow zsh
+stow zsh_gnome
 touch ~/.config/path_custom.zsh
 
 # tmux

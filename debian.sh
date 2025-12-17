@@ -1,6 +1,6 @@
-apt install sudo curl wget vim eza zoxide procs  glow unzip hexyl du-dust
-apt install bottom tmux fastfetch
-apt install starship eza zoxide ripgrep fd-find zsh atuin
+apt install sudo curl wget vim exa zoxide unzip hexyl # du-dust glow procs
+apt install tmux fastfetch # bottom
+apt install ripgrep fd-find zsh stow
 apt autoremove nano
 curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o /usr/bin/bash-preexec.sh
 
@@ -60,5 +60,9 @@ cd ~
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/tom/.profile
 
-
+brew install atuin
+brew install starship
+brew install oh-my-posh
+brew install helix
+brew install glow
 apt install fnt
