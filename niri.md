@@ -1,8 +1,8 @@
 # 桌面环境
 ```bash
-sudo pacman -S wayland pipewire-jack xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring mako fuzzel xwayland-satellite sddm niri mate-polkit # wev
+sudo pacman -S wayland pipewire-jack xdg-desktop-portal-cosmic gnome-keyring mako fuzzel xwayland-satellite sddm niri mate-polkit egl-wayland thunar # wev
 paru -S sddm-theme-greenleaf sddm-old-breeze-theme
-# sudo pacman -S  konsole dolphin 
+# sudo pacman -S  konsole dolphin  xdg-desktop-portal-gtk xdg-desktop-portal-gnome
 ```
 
 ## sddm
@@ -26,6 +26,10 @@ sudo cp Pictures/test.png /usr/share/sddm/themes/greenleaf/background.png
 
 ```bash
 paru -S noctalia-shell
+# pacman -S quickshell ttf-roboto inter-font gpu-screen-recorder brightnessctl ddcutil # 已以依赖安装
+sudo pacman -S cliphist  cava wlsunset
+paru -S matugen-bin
+
 
 mkdir -p ~/.config/systemd/user/
 vim ~/.config/systemd/user/noctalia.service

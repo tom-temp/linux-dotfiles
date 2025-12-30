@@ -102,3 +102,30 @@ case "${TERM}" in
     bindkey '^[[1;5D' backward-word       # ctrl left
     ;;
 esac
+
+
+# <<< mamba initialize <<<
+#
+#
+# 定义一个名为 'init_mamba_conda' 的函数，只在需要时执行
+init_mamba_conda() {
+    # ------------------------------------
+    # Conda/MiniForge 初始化代码（从你的.zshrc中复制而来）
+    # ------------------------------------
+    
+    __conda_setup="$('/opt/PyEnv/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/opt/PyEnv/etc/profile.d/conda.sh" ]; then
+            . "/opt/PyEnv/etc/profile.d/conda.sh"
+        else
+            export PATH="/opt/PyEnv/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    
+    # ------------------------------------
+    
+    echo "✅ Conda/Mamba 环境已按需初始化。"
+}
