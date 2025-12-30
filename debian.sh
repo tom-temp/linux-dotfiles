@@ -60,7 +60,7 @@ cd ~
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/tom/.profile
 
-brew install atuin@18.10.0
+brew install atuin
 brew install starship
 brew install oh-my-posh
 brew install helix
