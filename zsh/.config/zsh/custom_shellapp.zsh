@@ -43,12 +43,21 @@ export GITUL=http://github.opsp.eu.org/
 export EDITOR='/usr/bin/vim'
 
 
+# Theme =========================================================
+# if [ -e "~/.config/starship.toml" && "$(command -v starship)"  ]; then
+#     eval "$(starship init zsh)"
+# elif [ -e "~/.config/zsh/theme/timwhite.omp.toml" && "$(command -v oh-my-posh)"  ];
+#     eval "$(oh-my-posh init zsh --config ~/.config/zsh/theme/timwhite.omp.toml )"
+# fi
 
-# theme =======================================================================================================================
-# starship
-if [ "$(command -v starship)" ]; then
+if [[ -f "$HOME/.config/starship.toml" && -n "$(command -v starship)" ]]; then
     eval "$(starship init zsh)"
+# 检查 Oh My Posh
+elif [[ -f "$HOME/.config/zsh/theme/timwhite.omp.toml" && -n "$(command -v oh-my-posh)" ]]; then
+    eval "$(oh-my-posh init zsh --config "$HOME/.config/zsh/theme/timwhite.omp.toml")"
 fi
+
+# APP =======================================================================================================================
 # atuin
 if [ "$(command -v atuin)" ]; then
     export ATUIN_NOBIND="true"
@@ -137,11 +146,6 @@ if [ "$(command -v yazi)" ]; then
         fi
         rmdel -f -- "$tmp"
     }
-fi
-
-# conda环境变量 ==================================================================================================================
-if [ "$(command -v condazshstart)" ]; then
-    alias condainit='source condazshstart'
 fi
 
 # rust环境变量 ==================================================================================================================
