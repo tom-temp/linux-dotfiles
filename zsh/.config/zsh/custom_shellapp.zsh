@@ -30,6 +30,9 @@ if [ "$(command -v pnpm)" ]; then
     *) export PATH="$PNPM_HOME:$PATH" ;;
     esac
 fi
+if [ "$(command -v bun)" ]; then
+    export PATH="/home/tom/.bun/bin:$PATH"
+fi
 
 export COLOR_H1_0='\e[1;35;42m'
 export COLOR_H1_1='\e[4;30;46m'
