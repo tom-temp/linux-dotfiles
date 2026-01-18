@@ -9,6 +9,7 @@ xbps-remove -R iptables openssh
 # voidlinux
 xbps-install fuse curl wget vim exa zoxide procs dust glow vsv unzip openssh openssl hexyl gitui helix
 xbps-install bottom tmux fastfetch bash-preexec
+xbps-install uv 
 
 # service
 rm -f /etc/localtime
@@ -93,7 +94,12 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6Jxi836pB6Fgw/wHlzPGCGxi002RGHUwaFc
 cd ~
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/tom/.profile
+brew install oh-my-posh
+brew install fnm
+fnm install 24
+corepack enable pnpm
 
+pnpm -v
 # cd ~
 
 

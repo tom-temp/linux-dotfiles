@@ -12,13 +12,28 @@ type = "prompt"
 alignment = "left"
 newline = true
 
+
     [[blocks.segments]]
+    style = "powerline"
+    type = "node"
+    # 模板解释：显示 node 图标，版本号，如果识别到 pnpm-lock.yaml 则显示 pnpm 图标
+    template = "  {{ .Full }}{{ if .PackageManagerIcon }} {{ .PackageManagerIcon }}{{ end }} "
+    foreground = "p:white"
+    background = "#689F63"
+
+    [blocks.segments.properties]
+        cache_duration = "none"
+        display_mode = "files" # 仅在有 package.json, node_modules 或相关锁文件时显示
+        fetch_package_manager = true # 识别 pnpm/npm/yarn
+        home_enabled = false
+
+    [[blocks.segments]]
+    style = "powerline"
+    type = "python"
     template = "  : {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} "
     foreground = "p:white"
     background = "#306998"
     # powerline_symbol = ""
-    type = "python"
-    style = "powerline"
 
         [blocks.segments.properties]
         cache_duration = "none"
@@ -40,9 +55,9 @@ newline = true
 
         [blocks.segments.properties]
         cache_duration = "none"
-        linux = ""
-        macos = ""
-        ubuntu = ""
+        linux = " "
+        macos = " "
+        ubuntu = " "
         windows = "W"
 
     [[blocks.segments]]
