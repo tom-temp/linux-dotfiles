@@ -79,6 +79,8 @@ fi
 if [ "$(command -v gomi)" ]; then
     alias rm='gomi'
     alias rml='gomi --restore'
+else
+    alias mv='mv -i'
 fi
 
 if [ "$(command -v yazi)" ]; then

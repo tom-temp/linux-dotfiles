@@ -1,7 +1,10 @@
-apt install sudo curl wget vim exa zoxide unzip hexyl # du-dust glow procs
+apt install sudo curl wget vim eza zoxide unzip hexyl # du-dust glow procs
 apt install tmux fastfetch # bottom
 apt install ripgrep fd-find zsh stow
 apt autoremove nano
+apt-get install -y locales
+vim /etc/locale.gen
+locale-gen
 curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o /usr/bin/bash-preexec.sh
 
 # user
