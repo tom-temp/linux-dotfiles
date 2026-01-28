@@ -1,0 +1,5 @@
+[global]
+target = "~/.local/bin"
+
+["anomalyco/opencode"]
+upgrade_only = true
