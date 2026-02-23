@@ -90,9 +90,6 @@ zh_CN.UTF-8 UTF-8
 
 
 locale-gen
-vim /etc/locale.conf
-#### 插入
-LANG=en_US.UTF-8
 
 passwd
 ```
@@ -102,9 +99,9 @@ passwd
 ```bash
 pacman -S grub efibootmgr os-prober
 grub-install --target=x86_64-efi --efi-directory=/boot/EFI --bootloader-id=ARCH 
---target指定架构
---efi-directory指定目录
---bootloader-id任意取一个启动项在bios里显示的名字
+# --target指定架构
+# --efi-directory指定目录
+# --bootloader-id任意取一个启动项在bios里显示的名字
 
 vim /etc/default/grub
 ```
@@ -149,7 +146,17 @@ lsblk -o NAME,PARTUUID,UUID # 查看PARTUUID
 "Boot to terminal"               "root=PARTUUID=50ad4c6c-b054-4df3-9bc1-3d840e4195c1 rootflags=subvol=@ rw add_efi_memmap systemd.unit=multi-user.target"
 ```
 
-
+```bash
+systemctl enable NetworkManager 
+nmtui
+```
+## 用户
+```bash
+useradd -m -g wheel <username> 
+passwd <username>
+vim /etc/sudoers
+%wheel ALL=（ALL：ALL） ALL
+```
 
 > 重启
 
@@ -161,14 +168,6 @@ lsblk -o NAME,PARTUUID,UUID # 查看PARTUUID
 ```bash
 systemctl enable --now NetworkManager 
 nmtui
-```
-
-## 用户
-```bash
-useradd -m -g wheel <username> 
-passwd <username>
-vim /etc/sudoers
-%wheel ALL=（ALL：ALL） ALL
 ```
 
 ## 安装字体与显卡驱动
@@ -188,9 +187,18 @@ sudo systemctl enable --now spice-vdagentd
 
 
 ## 虚拟机下安装驱动VMware
-sudo pacman -S  open-vm-tools xf86-input-vmmouse mesa vulkan-mesa-layers lib32-vulkan-mesa-layers vulkan-tools xf86-video-vesa
+sudo pacman -S  open-vm-tools xf86-input-vmmouse mesa vulkan-mesa-layers vulkan-mesa-implicit-layers vulkan-mesa-layers vulkan-tools xf86-video-vesa
 systemctl enable sshd vmtoolsd vmware-vmblock-fuse
 # lib32-vulkan-virtio pacman -S 
+
+## 安装hyperv 驱动
+pacman -S mesa vulkan-mesa-layers vulkan-tools hyperv
+vim /etc/mkinitcpio.conf
+MODULES=(hv_vmbus hv_utils hv_storic hv_netvsc hyperv_drm hyperv_fb)
+mkinitcpio -P
+systemctl enable --now hv_fcopy_daemon
+systemctl enable --now hv_kvp_daemon
+systemctl enable --now hv_vss_daemon
 
 # 查看vulkan与opengl输出
 vulkaninfo
